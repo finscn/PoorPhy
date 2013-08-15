@@ -35,6 +35,7 @@
         sensor: false,
 
         restitutionVelocity: 1,
+        splittingFrame : 3,
 
         set: function(bodyA, bodyB, normalA) {
             this.bodyA = bodyA;
@@ -166,12 +167,14 @@
                 if (rvN===null){
                     rvN=normalRelativeVel;
                 }
+                restitution=0;
                 if (contact.velocityBias === null) {
                     contact.velocityBias = restitution * rvN;
                 }
-                // if (depth > 0) {
-                //     normalRelativeVel += depth / timeStep /iterations ;
-                // }
+
+                if (depth > 0) {
+                    normalRelativeVel += depth / timeStep / this.splittingFrame ;// /iterations;
+                }
 
 
                 var impN = normalMass * -(normalRelativeVel + contact.velocityBias);
