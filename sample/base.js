@@ -2,6 +2,10 @@ var METER_TO_PX = 1;
 var RENDER_SCALE = 30;
 var DEFAULT_COLOR = "#ff0033";
 
+function randomInt(min, max) {
+    return min+(max - min + 1) * Math.random()>>0;
+}
+
 function rotatePoints(points, ang) {
     var cos = Math.cos(ang),
         sin = Math.sin(ang);
