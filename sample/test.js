@@ -8,14 +8,14 @@ var allowSleep = false;
 var notSolve = false;
 
 var gravity = 10;
-var friction = 0.5;
+var friction = 0.3;
 var damping = 0;
 
 var linearSlop= 0;//0.005;
 var angularSlop = 2.0 / 180.0 * Math.PI;
 
-var restitution = 0;//0.3;
-var solveIterations=1//6;
+var restitution = 0.3;
+var solveIterations=6;
 
 
 function initGround() {
