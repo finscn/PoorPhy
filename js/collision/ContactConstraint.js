@@ -167,7 +167,7 @@
                 if (rvN===null){
                     rvN=normalRelativeVel;
                 }
-                restitution=0;
+                // restitution=0;
                 if (contact.velocityBias === null) {
                     contact.velocityBias = restitution * rvN;
                 }
