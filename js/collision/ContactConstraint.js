@@ -65,20 +65,10 @@
             var bodyA = this.bodyA,
                 bodyB = this.bodyB;
 
-            if (depth === undefined) {
+            // if (depth === undefined) {
                 depth = (contactOnA[0] - contactOnB[0]) * normal[0] + (contactOnA[1] - contactOnB[1]) * normal[1];
-            }
-            // depth = Math.abs(depth)
-
-            // if (this.contactCount > 0) {
-            //     var con = this.contacts[0];
-            //     // depth = con.depth = Math.max(depth , con.depth);// / 2;
-            //     if (depth > con.depth) {
-            //         con.depth = 0;
-            //     } else {
-            //         depth = 0;
-            //     }
             // }
+            
             var armA = [contactOnA[0] - bodyA.x, contactOnA[1] - bodyA.y];
             var armB = [contactOnB[0] - bodyB.x, contactOnB[1] - bodyB.y];
 
@@ -106,12 +96,6 @@
 
             var velocityBias = null;
 
-            // var relativeVel = [
-            //     (bodyA.velX - bodyA.velAng * armA[1]) - (bodyB.velX - bodyB.velAng * armB[1]), (bodyA.velY + bodyA.velAng * armA[0]) - (bodyB.velY + bodyB.velAng * armB[0])
-            // ]
-            // var normalRelativeVel = relativeVel[0] * normal[0] + relativeVel[1] * normal[1];
-            // velocityBias = this.restitution * normalRelativeVel;
-
             var contact = {
                 contactOnA: contactOnA,
                 contactOnB: contactOnB,
@@ -130,32 +114,6 @@
         },
 
 
-        preSolve: function() {
-
-            var bodyA = this.bodyA;
-            var bodyB = this.bodyB;
-            var nx = this.normal[0];
-            var ny = this.normal[1];
-
-            for (var i = 0; i < this.contacts.length; i++) {
-                var con = this.contacts[i];
-
-                var impX = nx * con.normalImpulse - ny * con.tangentImpulse;
-                var impY = nx * con.tangentImpulse + ny * con.normalImpulse;
-
-
-                bodyA.velX += (impX * bodyA.invMass);
-                bodyA.velY += (impY * bodyA.invMass);
-                bodyA.velAng += (con.armA[0] * impY - con.armA[1] * impX) * bodyA.invInertia;
-
-
-                bodyB.velX -= (impX * bodyB.invMass);
-                bodyB.velY -= (impY * bodyB.invMass);
-                bodyB.velAng -= (con.armB[0] * impY - con.armB[1] * impX) * bodyB.invInertia;
-
-            }
-        },
-
         solve: function(timeStep, iterations) {
             var bodyA = this.bodyA,
                 bodyB = this.bodyB,
@@ -171,7 +129,7 @@
             var contacts = this.contacts;
             var contactCount = contacts.length;
 
-
+            var rvN=null;
             for (var k = 0; k < contactCount; k++) {
                 var contact = contacts[k];
 
@@ -199,17 +157,22 @@
 
 
                 var relativeVel = [
-                    (bodyA.velX - bodyA.velAng * armA[1]) - (bodyB.velX - bodyB.velAng * armB[1]), (bodyA.velY + bodyA.velAng * armA[0]) - (bodyB.velY + bodyB.velAng * armB[0])
+                    (bodyA.velX - bodyA.velAng * armA[1]) - (bodyB.velX - bodyB.velAng * armB[1]),
+                    (bodyA.velY + bodyA.velAng * armA[0]) - (bodyB.velY + bodyB.velAng * armB[0])
                 ]
                 var normalRelativeVel = relativeVel[0] * normal[0] + relativeVel[1] * normal[1];
 
 
-                if (contact.velocityBias===null){
-                    contact.velocityBias = restitution * normalRelativeVel;
+                if (rvN===null){
+                    rvN=normalRelativeVel;
                 }
-                if (depth > 0) {
-                    normalRelativeVel += depth  / timeStep / iterations ;
+                if (contact.velocityBias === null) {
+                    contact.velocityBias = restitution * rvN;
                 }
+                // if (depth > 0) {
+                //     normalRelativeVel += depth / timeStep /iterations ;
+                // }
+
 
                 var impN = normalMass * -(normalRelativeVel + contact.velocityBias);
                 var normalImpulse = contact.normalImpulse;
@@ -220,10 +183,11 @@
                 var tangentRelativeVel = relativeVel[0] * tangent[0] + relativeVel[1] * tangent[1];
 
                 var impT = tangentMass * -tangentRelativeVel;
-                var frictionImp = Math.abs( contact.normalImpulse * friction );
+                var frictionImp = Math.abs(contact.normalImpulse * friction);
                 var tangentImpulse = contact.tangentImpulse;
                 contact.tangentImpulse = Math.max(-frictionImp, Math.min(impT + tangentImpulse, frictionImp));
                 impT = contact.tangentImpulse - tangentImpulse;
+
 
 
                 var impX = normal[0] * impN - normal[1] * impT;
@@ -239,6 +203,11 @@
                 bodyB.velY -= (impY * bodyB.invMass);
                 bodyB.velAng -= (armB[0] * impY - armB[1] * impX) * bodyB.invInertia;
 
+                // drawPoly(context, bodyB, "#fff")
+                // drawPoly(context, bodyA)
+                // drawPoint(context, contactOnB, "#fff")
+                // console.log(impY, (armB[0] * impY - armB[1] * impX) * bodyB.invInertia)
+                // debugger
 
             }
 

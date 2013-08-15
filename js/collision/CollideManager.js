@@ -151,12 +151,12 @@
             var contactConstraintCount = this.contactConstraintCount;
             var iterations=this.solveIterations;
 
-            for (var j = 0; j < iterations; j++) {
-                for (var i = 0; i < contactConstraintCount; i++) {
-                    var contactConstraint = contactConstraints[i];
-                    var solved = contactConstraint.solve(timeStep, iterations);
+            for (var i = 0; i < iterations; i++) {
+                for (var j = 0; j < contactConstraintCount; j++) {
+                    var contactConstraint = contactConstraints[j];
+                    var solved = contactConstraint.solve(timeStep, iterations,i);
                     if (solved) {
-                        this.onCollideSolve(contactConstraint, timeStep)
+                        this.onCollideSolve(contactConstraint, timeStep, iterations,i)
                     }
 
                 }
@@ -278,11 +278,11 @@
                 contactOnFace0 = Polygon.projectPointToEdge(contactOnVert0, faceV0, faceV1);
 
             }
+
+
             contactConstraint.set(facePoly, vertPoly, faceNormal);
-            contactConstraint.addContact(contactOnFace0, contactOnVert0, overlap);
+            contactConstraint.addContact(contactOnFace0, contactOnVert0);
             this.contactConstraintCount = contactConstraintCount;
-
-
             return contactConstraint;
         },
 
@@ -368,8 +368,8 @@
                 var nx = -disX0 / dis,
                     ny = -disY0 / dis;
 
-                normal = [nx, ny, cx * nx + cy * ny];
-                min = normal[2] + radius;
+                normal = [nx, ny];
+                // min = normal[2] + radius;
 
                 result.facePoly = circle;
                 result.vertPoly = poly;
@@ -388,10 +388,8 @@
                 var nx = -disX1 / dis,
                     ny = -disY1 / dis;
 
-                normal = [nx, ny, cx * nx + cy * ny];
-
-                min = normal[2] + radius;
-
+                normal = [nx, ny];
+                // min = normal[2] + radius;
 
                 result.facePoly = circle;
                 result.vertPoly = poly;
@@ -402,7 +400,6 @@
                 result.closestIdx = vertIdx1;
 
             } else {
-                // console.log("min2",min)
                 result.facePoly = poly;
                 result.vertPoly = circle;
                 result.minDist = min;
@@ -486,8 +483,6 @@
             if (contactOnFace1) {
                 contactConstraint.addContact(contactOnFace1, contactOnVert1);
             }
-
-
 
             this.contactConstraintCount = contactConstraintCount;
             return contactConstraint;
