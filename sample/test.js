@@ -4,25 +4,27 @@ var FPS = 60;
 var timeStep = 1 / 60;
 var RENDER_SCALE = 30;
 var scale = 1;
-var allowSleep = false;
+var allowSleep = true;
 var notSolve = false;
 
 var gravity = 10;
-var friction = 0.3;
 var damping = 0;
 
-var linearSlop= 0;//0.005;
+var linearSlop = 0; //0.005;
 var angularSlop = 2.0 / 180.0 * Math.PI;
 
-var restitution = 0.3;
-var solveIterations=6;
+var friction = 0.3;
+var restitution = 0.5;
+var solveIterations = 5;
 
 
 function initGround() {
+    var w;
 
-    // createRectBody(1,12,1,7.5,0,BodyType.Static)
-    // createRectBody(1,12,19,7.5,0,BodyType.Static)
-    createRectBody(20,1,10,14,0,BodyType.Static)
+    w=createRectBody(1, 12, 1, 5, 0, BodyType.Static)
+    w.velAng=-0.3;
+    w=createRectBody(1, 12, 19, 5, 0, BodyType.Static)
+    w=createRectBody(20, 1, 10, 14, 0.1, BodyType.Static)
 
     // createCircleBody(10, -7, 8, 0, BodyType.Static)
     // createCircleBody(10, 27, 8, 0, BodyType.Static)
@@ -33,16 +35,29 @@ var bb1, bb2, bb3;
 
 function initBodies() {
 
-    // bb1=createRectBody(3,1,5,9,0);
-    bb2=createRectBody(4,2,7,4.5,0);
 
-    // bb3 = createCircleBody(1.5, 5, 9)
-    // bb3 = createCircleBody(1, 6, 5)
-    // bb3 = createCircleBody(1, 10, 7)
-    // bb3 = createCircleBody(1.5, 15, 6)
 
 }
 
+
+function createRandomShape(w,h,x,y){
+    var r=(w+h)/2/2;
+    var i=randomInt(0,2);
+    var shape;
+    switch(i){
+        case 0:
+            shape=createCircleBody( r,x,y, randomInt(100,314)/100 );
+            break;
+        case 1:
+            shape=createRectBody(w,h,x,y, randomInt(100,314)/100 );
+            break;
+        case 2:
+            var v=createRandomPoly( randomInt(3,8),w,h);
+            shape=createPolyBody(v,x,y, randomInt(100,314)/100 );
+            break;
+    }
+    return shape;
+}
 
 function init() {
 
@@ -59,7 +74,17 @@ function init() {
     initBodies();
 
 
+    var count=0; var x=0;
+    var frame=0;
     function update() {
+        if (frame%100===0){
+            if (x>8){
+                x=0;
+            }
+            x=x+randomInt(2,3.5);
+            createRandomShape(2.5,2.5, x+2, randomInt(-3,-1));
+        }
+        frame++;
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -69,8 +94,8 @@ function init() {
 
         var bodies = world.bodies;
 
+        // drawPoint(context, 10, 7)
         for (var i = 0, body; body = bodies[i++];) {
-            drawPoint(context, 10, 7)
             var color = body.sleeping ? "#dddddd" : "#ff3300";
             if (body.shapeType == ShapeType.Poly) {
                 drawPoly(context, body, color);
