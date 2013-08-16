@@ -1,4 +1,13 @@
 "use strict";
+
+(function(_this){
+    if (typeof exports=="undefined"){
+        var _scope=window||_this;
+        _scope.exports=_scope;
+    }
+}(this));
+
+
 (function(exports, undefined) {
 
 
@@ -41,4 +50,4 @@
     exports.ShapeType = ShapeType;
     exports.Utils = Utils;
 
-}(this));
+}(exports));

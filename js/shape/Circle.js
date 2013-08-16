@@ -116,4 +116,4 @@
 
     exports.Circle = Circle;
 
-}(this));
+}(exports));

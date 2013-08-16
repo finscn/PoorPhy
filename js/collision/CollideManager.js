@@ -615,4 +615,4 @@
     }
 
     exports.CollideManager = CollideManager;
-}(this));
+}(exports));

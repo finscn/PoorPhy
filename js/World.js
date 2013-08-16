@@ -123,4 +123,4 @@
 
     exports.World = World;
 
-}(this));
+}(exports));

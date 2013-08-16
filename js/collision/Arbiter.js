@@ -227,4 +227,4 @@
 
     exports.Arbiter = Arbiter;
 
-}(this));
+}(exports));

@@ -325,4 +325,4 @@
 
     exports.Polygon = Polygon;
 
-}(this));
+}(exports));

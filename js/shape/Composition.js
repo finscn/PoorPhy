@@ -2,4 +2,4 @@
 (function(exports, undefined) {
 	//TODO
 
-}(this));
+}(exports));

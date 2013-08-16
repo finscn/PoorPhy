@@ -108,4 +108,4 @@
 
     exports.WorldRunner = WorldRunner;
 
-}(this));
+}(exports));

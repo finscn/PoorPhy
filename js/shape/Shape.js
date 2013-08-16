@@ -1,6 +1,6 @@
 "use strict";
 (function(exports, undefined) {
-	//TODO
+
 
     var Shape = function(cfg) {
 
@@ -43,4 +43,4 @@
 
     exports.Shape = Shape;
 
-}(this));
+}(exports));
