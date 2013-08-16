@@ -26,8 +26,8 @@
             this.world = world;
 
             this.penetrated = {};
-            this.contactConstraints = [];
-            this.contactConstraintCount = 0;
+            this.arbiters = [];
+            this.arbiterCount = 0;
 
             this.collide = this.collide || this.collideSimple;
             // this.collide = this.collide || this.collideGrid;
@@ -49,7 +49,7 @@
             var grid = {};
             var cc = 0;
 
-            this.contactConstraintCount = 0;
+            this.arbiterCount = 0;
             var bodies = this.world.bodies;
 
             for (var i = 0, len = bodies.length; i < len; i++) {
@@ -97,7 +97,7 @@
         collideSimple: function(timeStep) {
             var cc = 0;
 
-            this.contactConstraintCount = 0;
+            this.arbiterCount = 0;
             var bodies = this.world.bodies;
 
             for (var i = 0, len = bodies.length; i < len - 1; i++) {
@@ -125,15 +125,15 @@
             var contactKey = bodyA._sn + "_" + bodyB._sn;
             var boxA = bodyA.aabb,
                 boxB = bodyB.aabb;
-            var contactConstraint = false;
+            var arbiter = false;
             if (boxA[0] < boxB[2] && boxA[2] > boxB[0] && boxA[1] < boxB[3] && boxA[3] > boxB[1]) {
 
-                contactConstraint = this[this.collideMap[bodyA.shapeType | bodyB.shapeType]](bodyA, bodyB);
+                arbiter = this[this.collideMap[bodyA.shapeType | bodyB.shapeType]](bodyA, bodyB);
 
             }
-            if (contactConstraint) {
+            if (arbiter) {
                 if (!this.penetrated[contactKey]) {
-                    this.onCollided(bodyA, bodyB, contactConstraint, timeStep);
+                    this.onCollided(bodyA, bodyB, arbiter, timeStep);
                     this.penetrated[contactKey] = true;
                 }
             } else {
@@ -142,21 +142,21 @@
                     this.penetrated[contactKey] = false;
                 }
             }
-            return contactConstraint;
+            return arbiter;
         },
 
 
         solve: function(timeStep) {
-            var contactConstraints = this.contactConstraints;
-            var contactConstraintCount = this.contactConstraintCount;
+            var arbiters = this.arbiters;
+            var arbiterCount = this.arbiterCount;
             var iterations=this.solveIterations;
 
             for (var i = 0; i < iterations; i++) {
-                for (var j = 0; j < contactConstraintCount; j++) {
-                    var contactConstraint = contactConstraints[j];
-                    var solved = contactConstraint.solve(timeStep, iterations,i);
+                for (var j = 0; j < arbiterCount; j++) {
+                    var arbiter = arbiters[j];
+                    var solved = arbiter.solve(timeStep, iterations,i);
                     if (solved) {
-                        this.onCollideSolve(contactConstraint, timeStep, iterations,i)
+                        this.onCollideSolve(arbiter, timeStep, iterations,i)
                     }
 
                 }
@@ -165,21 +165,21 @@
         },
 
 
-        onCollided: function(bodyA, bodyB, contactConstraint, timeStep) {
+        onCollided: function(bodyA, bodyB, arbiter, timeStep) {
 
         },
         onSeparated: function(bodyA, bodyB, timeStep) {
 
         },
-        onCollideSolve: function(contactConstraint, timeStep) {
+        onCollideSolve: function(arbiter, timeStep) {
 
         },
 
 
         collideCircleCircle: function(bodyA, bodyB) {
 
-            var contactConstraints = this.contactConstraints;
-            var contactConstraintCount = this.contactConstraintCount;
+            var arbiters = this.arbiters;
+            var arbiterCount = this.arbiterCount;
 
             var centreA = bodyA.centre,
                 centreB = bodyB.centre;
@@ -210,20 +210,20 @@
                 centreB[0] + (centreA[0] - centreB[0]) * ratioB, centreB[1] + (centreA[1] - centreB[1]) * ratioB
             ]
 
-            if (!contactConstraints[contactConstraintCount]) {
-                contactConstraints[contactConstraintCount] = new ContactConstraint();
+            if (!arbiters[arbiterCount]) {
+                arbiters[arbiterCount] = new Arbiter();
             }
-            var contactConstraint = contactConstraints[contactConstraintCount++];
+            var arbiter = arbiters[arbiterCount++];
             var overlap = rt - distance;
 
             // normalA[2] = centreA[0] * normalA[0] + centreA[1] * normalA[1];
-            contactConstraint.set(bodyA, bodyB, normalA);
-            // contactConstraint.set(bodyA, bodyB, normalA);
+            arbiter.set(bodyA, bodyB, normalA);
+            // arbiter.set(bodyA, bodyB, normalA);
 
-            contactConstraint.addContact(contactOnA, contactOnB, overlap);
+            arbiter.addContact(contactOnA, contactOnB, overlap);
 
-            this.contactConstraintCount = contactConstraintCount;
-            return contactConstraint;
+            this.arbiterCount = arbiterCount;
+            return arbiter;
 
 
         },
@@ -244,8 +244,8 @@
                 return false;
             }
 
-            var contactConstraints = this.contactConstraints;
-            var contactConstraintCount = this.contactConstraintCount;
+            var arbiters = this.arbiters;
+            var arbiterCount = this.arbiterCount;
 
             var facePoly = result.facePoly;
             var vertPoly = result.vertPoly;
@@ -255,10 +255,10 @@
             var faceIdx = result.faceIdx;
             var overlap = result.minDist;
 
-            if (!contactConstraints[contactConstraintCount]) {
-                contactConstraints[contactConstraintCount] = new ContactConstraint();
+            if (!arbiters[arbiterCount]) {
+                arbiters[arbiterCount] = new Arbiter();
             }
-            var contactConstraint = contactConstraints[contactConstraintCount++];
+            var arbiter = arbiters[arbiterCount++];
 
             var contactOnFace0;
             var contactOnVert0;
@@ -280,10 +280,10 @@
             }
 
 
-            contactConstraint.set(facePoly, vertPoly, faceNormal);
-            contactConstraint.addContact(contactOnFace0, contactOnVert0);
-            this.contactConstraintCount = contactConstraintCount;
-            return contactConstraint;
+            arbiter.set(facePoly, vertPoly, faceNormal);
+            arbiter.addContact(contactOnFace0, contactOnVert0);
+            this.arbiterCount = arbiterCount;
+            return arbiter;
         },
 
 
@@ -455,13 +455,13 @@
             faceV0 = facePoly.vertices[faceIdx];
             faceV1 = facePoly.vertices[(faceIdx + 1) % facePoly.vertexCount];
 
-            var contactConstraints = this.contactConstraints;
-            var contactConstraintCount = this.contactConstraintCount;
+            var arbiters = this.arbiters;
+            var arbiterCount = this.arbiterCount;
 
-            if (!contactConstraints[contactConstraintCount]) {
-                contactConstraints[contactConstraintCount] = new ContactConstraint();
+            if (!arbiters[arbiterCount]) {
+                arbiters[arbiterCount] = new Arbiter();
             }
-            var contactConstraint = contactConstraints[contactConstraintCount++];
+            var arbiter = arbiters[arbiterCount++];
 
             var contactOnFace0, contactOnVert0, contactOnFace1, contactOnVert1;
             var overlap;
@@ -476,16 +476,16 @@
                 contactOnFace0 = Polygon.projectPointToEdge(contactOnVert0, faceV0, faceV1);
             }
 
-            contactConstraint.set(facePoly, vertPoly, faceNormal);
+            arbiter.set(facePoly, vertPoly, faceNormal);
 
 
-            contactConstraint.addContact(contactOnFace0, contactOnVert0);
+            arbiter.addContact(contactOnFace0, contactOnVert0);
             if (contactOnFace1) {
-                contactConstraint.addContact(contactOnFace1, contactOnVert1);
+                arbiter.addContact(contactOnFace1, contactOnVert1);
             }
 
-            this.contactConstraintCount = contactConstraintCount;
-            return contactConstraint;
+            this.arbiterCount = arbiterCount;
+            return arbiter;
         },
 
         featurePairPolyPoly: function(bodyA, bodyB) {

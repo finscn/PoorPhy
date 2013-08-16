@@ -1,7 +1,7 @@
 "use strict";
 (function(exports, undefined) {
 
-    var ContactConstraint = function() {
+    var Arbiter = function() {
 
         this.contacts = [];
 
@@ -22,7 +22,7 @@
 
 
     var proto = {
-        constructor: ContactConstraint,
+        constructor: Arbiter,
 
         bodyA: null,
         bodyB: null,
@@ -221,10 +221,10 @@
     };
 
     for (var key in proto) {
-        ContactConstraint.prototype[key] = proto[key];
+        Arbiter.prototype[key] = proto[key];
     }
 
 
-    exports.ContactConstraint = ContactConstraint;
+    exports.Arbiter = Arbiter;
 
 }(this));
