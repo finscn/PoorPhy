@@ -136,17 +136,18 @@ function createRectBody(w,h,x,y,angle,type){
 
 }
 
-function createCircleBody(r,x,y,angle,type){
+function createCircleBody(r,x,y,angle,type,mass){
     var body = new Circle({
         radius : r*scale,
         x : x*scale,
         y : y*scale,
         angle : angle||0,
         friction : friction,
+        mass : mass||mass===0?mass:null,
         restitution : restitution
     })
 
-    if (type!==undefined){
+    if (type!==undefined && type!==null){
         body.bodyType=type;
     }
     if (body.bodyType===BodyType.Static){
