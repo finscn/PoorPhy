@@ -1,10 +1,11 @@
 "use strict";
 (function(exports, undefined) {
 
-    var Arbiter = function() {
+    var Arbiter = function(bodyA, bodyB) {
 
         this.contacts = [];
 
+   
     };
 
 
@@ -22,7 +23,6 @@
 
 
     var proto = {
-        constructor: Arbiter,
 
         bodyA: null,
         bodyB: null,
@@ -40,6 +40,7 @@
         set: function(bodyA, bodyB, normalA) {
             this.bodyA = bodyA;
             this.bodyB = bodyB;
+            this.key=bodyA.id + "_" + bodyB.id;
             this.normal = normalA;
             this.tangent = [-normalA[1], normalA[0]];
 
@@ -55,20 +56,15 @@
 
         addContact: function(contactOnA, contactOnB, depth) {
 
-            // var biasCoef = 1 - Math.pow(this.collisionBias, dt);
-            // con.bias = -bias * min(0, con.dist + slop) / dt;
-            // con.jBias = 0;
-            // con.bounce = normal_relative_velocity(a, b, con.r1, con.r2, con.n) * this.e;
-
 
             var normal = this.normal;
             var tangent = this.tangent;
             var bodyA = this.bodyA,
                 bodyB = this.bodyB;
 
-            // if (depth === undefined) {
+            if (depth === undefined) {
                 depth = (contactOnA[0] - contactOnB[0]) * normal[0] + (contactOnA[1] - contactOnB[1]) * normal[1];
-            // }
+            }
             
             var armA = [contactOnA[0] - bodyA.x, contactOnA[1] - bodyA.y];
             var armB = [contactOnB[0] - bodyB.x, contactOnB[1] - bodyB.y];
@@ -220,11 +216,7 @@
 
     };
 
-    for (var key in proto) {
-        Arbiter.prototype[key] = proto[key];
-    }
 
-
-    exports.Arbiter = Arbiter;
+    exports.Arbiter = Class(Arbiter,proto);
 
 }(exports));

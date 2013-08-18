@@ -9,8 +9,7 @@
         }
     }
 
-    World.prototype = {
-        constructor: World,
+    var proto = {
 
         bodies: null,
 
@@ -25,8 +24,9 @@
         minSleepVelSq: 0.75,
         minSleepVelAng: 0.075,
 
+        solveIterations: 10,
 
-        bodySN: 1,
+        BODY_SN_SEED: 1,
 
 
         init: function() {
@@ -42,7 +42,8 @@
         },
 
         addBody: function(body) {
-            body._sn = this.bodySN++;
+            body._sn=this.BODY_SN_SEED++;
+            body.id = body.id||body._sn;
 
             if (body.bodyType !== BodyType.Static && !body.ignoreG) {
                 body.gravityX = this.gravityX;
@@ -70,6 +71,15 @@
             return false;
         },
 
+        solve: function(timeStep) {
+            var iterations = this.solveIterations;
+            var collideManager=this.collideManager;
+            for (var i = 0; i < iterations; i++) {
+                collideManager.solve(timeStep,iterations,i) 
+            }
+
+        },
+
 
         step: function(timeStep) {
             
@@ -93,8 +103,9 @@
                 i++;
             }
 
-            this.collideManager.collide(timeStep);
-            this.collideManager.solve(timeStep);
+            this.collideManager.update(timeStep);
+            // this.jointManager.update(timeStep);
+            this.solve(timeStep);
 
 
             i = 0;
@@ -120,7 +131,7 @@
 
     }
 
+    exports.World = Class(World,proto);
 
-    exports.World = World;
 
 }(exports));

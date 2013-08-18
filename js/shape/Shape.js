@@ -30,17 +30,7 @@
     };
 
 
-    if (Shape.superclass) {
-        var superProto = Shape.superclass.prototype;
-        for (var key in superProto) {
-            Shape.prototype[key] = superProto[key];
-        }
-    }
+    exports.Shape = Class(Shape,proto);
 
-    for (var key in proto) {
-        Shape.prototype[key] = proto[key];
-    }
-
-    exports.Shape = Shape;
 
 }(exports));

@@ -12,8 +12,6 @@
     Polygon.superclass = Shape;
 
     var proto = {
-        constructor: Polygon,
-
 
         shapeType: ShapeType.Poly,
 
@@ -153,6 +151,18 @@
             this.originalInertia = originalInertia/12 * this.density;
             this.setInertia(this.inertia!==null?this.inertia:this.originalInertia);
 
+        },
+
+        translateCentroid : function(x,y){
+            this.x+=x;
+            this.y+=y;
+            var localVertices=this.localVertices;
+            var len = localVertices.length;
+            for (var i=0;i<len;i++){
+                var local=localVertices[i];
+                local[0]-=x;
+                local[1]-=y;
+            }
         },
 
         updateVertices: function() {
@@ -311,18 +321,7 @@
         return false;
     };
 
+    exports.Polygon = Class(Polygon,proto);
 
-
-    if (Polygon.superclass) {
-        var superProto = Polygon.superclass.prototype;
-        for (var key in superProto) {
-            Polygon.prototype[key] = superProto[key];
-        }
-    }
-    for (var key in proto) {
-        Polygon.prototype[key] = proto[key];
-    }
-
-    exports.Polygon = Polygon;
 
 }(exports));

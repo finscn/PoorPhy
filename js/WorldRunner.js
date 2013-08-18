@@ -9,8 +9,7 @@
         }
     }
 
-    WorldRunner.prototype = {
-        constructor: WorldRunner,
+    var proto = {
 
         world: null,
         canvasId: "canvas",
@@ -105,7 +104,7 @@
         }
     }
 
-
-    exports.WorldRunner = WorldRunner;
+    exports.WorldRunner = Class(WorldRunner,proto);
 
 }(exports));
+

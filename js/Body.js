@@ -9,8 +9,7 @@
         }
     }
 
-    Body.prototype = {
-        constructor: Body,
+    var proto = {
 
         bodyType: BodyType.Dynamic,
 
@@ -26,6 +25,8 @@
         velX: 0,
         velY: 0,
         velAng: 0,
+
+        movement : null, // {}
 
         forceX: 0,
         forceY: 0,
@@ -182,13 +183,16 @@
         },
         integrate: function(timeStep) {
 
-            this.setAngle(this.angle + this.velAng * timeStep);
 
             this.velX += (this.forceX * this.invMass) * timeStep;
             this.velY += (this.forceY * this.invMass) * timeStep;
 
-            this.x += this.velX * timeStep;
-            this.y += this.velY * timeStep;
+            this.integrateAngle(timeStep);
+            this.integratePos(timeStep);
+            
+            // this.setAngle(this.angle + this.velAng * timeStep);
+            // this.x += this.velX * timeStep;
+            // this.y += this.velY * timeStep;
 
         },
 
@@ -211,6 +215,7 @@
         },
         
         integrateAngle: function(timeStep) {
+            this.lastAngle=this.angle;
             this.setAngle(this.angle + this.velAng * timeStep);
         },
 
@@ -218,14 +223,12 @@
         integratePos: function(timeStep) {
             this.lastX = this.x;
             this.lastY = this.y;
-            this.x += this.velX * timeStep;
-            this.y += this.velY * timeStep;
+            this.setPos(this.x+this.velX * timeStep, this.y+this.velY * timeStep);
         },
-
 
     }
 
+    exports.Body = Class(Body,proto);
 
-    exports.Body = Body;
 
 }(exports));
