@@ -160,6 +160,12 @@ function createCircleBody(r,x,y,angle,type){
 }
 
 function drawPoly(context, poly, color) {
+    if (poly.shapes){
+        poly.shapes.forEach(function(p){
+            drawPoly(context,p,color);
+        });
+        return;
+    }
     var drawNormal = false;
 
     context.strokeStyle = color || DEFAULT_COLOR;
