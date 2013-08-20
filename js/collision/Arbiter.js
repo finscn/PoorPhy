@@ -5,7 +5,7 @@
 
         this.contacts = [];
 
-   
+
     };
 
 
@@ -35,12 +35,12 @@
         sensor: false,
 
         restitutionVelocity: 1,
-        splittingFrame : 3,
+        splittingFrame: 3,
 
         set: function(bodyA, bodyB, normalA) {
             this.bodyA = bodyA;
             this.bodyB = bodyB;
-            this.key=bodyA.id + "_" + bodyB.id;
+            this.key = bodyA.id + "_" + bodyB.id;
             this.normal = normalA;
             this.tangent = [-normalA[1], normalA[0]];
 
@@ -65,7 +65,7 @@
             if (depth === undefined) {
                 depth = (contactOnA[0] - contactOnB[0]) * normal[0] + (contactOnA[1] - contactOnB[1]) * normal[1];
             }
-            
+
             var armA = [contactOnA[0] - bodyA.x, contactOnA[1] - bodyA.y];
             var armB = [contactOnB[0] - bodyB.x, contactOnB[1] - bodyB.y];
 
@@ -110,6 +110,36 @@
             this.contactCount++;
         },
 
+        isFirstContact : function(){
+
+        },
+        preSolve : function(timeStep, iterations){
+            if (this.isFirstContact()) return;
+
+            var bodyA = this.bodyA;
+            var bodyB = this.bodyB;
+
+            for (var i = 0; i < this.contacts.length; i++) {
+                var con = this.contacts[i];
+
+                var nx = con.normal[0];
+                var ny = con.normal[1];
+                var impX = nx * con.normalImpulse - ny * con.tangentImpulse;
+                var impY = nx * con.tangentImpulse + ny * con.normalImpulse;
+
+                bodyA.velX += (impX * bodyA.invMass);
+                bodyA.velY += (impY * bodyA.invMass);
+                bodyA.velAng += (armA[0] * impY - armA[1] * impX) * bodyA.invInertia;
+
+
+                bodyB.velX -= (impX * bodyB.invMass);
+                bodyB.velY -= (impY * bodyB.invMass);
+                bodyB.velAng -= (armB[0] * impY - armB[1] * impX) * bodyB.invInertia;
+
+
+            }
+
+        },
 
         solve: function(timeStep, iterations) {
             var bodyA = this.bodyA,
@@ -126,7 +156,7 @@
             var contacts = this.contacts;
             var contactCount = contacts.length;
 
-            var rvN=null;
+            var rvN = null;
             for (var k = 0; k < contactCount; k++) {
                 var contact = contacts[k];
 
@@ -154,22 +184,49 @@
 
 
                 var relativeVel = [
-                    (bodyA.velX - bodyA.velAng * armA[1]) - (bodyB.velX - bodyB.velAng * armB[1]),
+                    (bodyA.velX - bodyA.velAng * armA[1]) - (bodyB.velX - bodyB.velAng * armB[1]), 
                     (bodyA.velY + bodyA.velAng * armA[0]) - (bodyB.velY + bodyB.velAng * armB[0])
                 ]
                 var normalRelativeVel = relativeVel[0] * normal[0] + relativeVel[1] * normal[1];
 
-
-                if (rvN===null){
-                    rvN=normalRelativeVel;
+                if (rvN === null) {
+                    rvN = normalRelativeVel;
                 }
-                // restitution=0;
+
+
                 if (contact.velocityBias === null) {
                     contact.velocityBias = restitution * rvN;
                 }
 
                 if (depth > 0) {
-                    normalRelativeVel += depth / timeStep / this.splittingFrame ;// /iterations;
+                    // TODO :  improve stability
+
+                    // normalRelativeVel += depth/timeStep/iterations;
+
+                    // var dt = timeStep / iterations;
+                    // var dd = depth / iterations ;// / this.splittingFrame;
+                    // normalRelativeVel += dd / dt;
+                    // contact.depth -= dd;
+
+
+                    var dt = timeStep;
+                    var dd = depth / this.splittingFrame;
+                    normalRelativeVel += dd / dt;
+                    contact.depth -= dd/iterations;
+
+
+                    // var dt = timeStep;
+                    // var dd = depth / this.splittingFrame;
+                    // // var dd = depth / iterations;
+                    // // var dd = depth / this.splittingFrame / iterations;
+                    // normalRelativeVel += dd / dt;
+                    // // contact.depth -= dd;
+                    // contact.depth -= dd/iterations;
+                    // // contact.depth -= dd/this.splittingFrame;
+
+                    
+                    // contact.depth=0;
+
                 }
 
 
@@ -217,6 +274,6 @@
     };
 
 
-    exports.Arbiter = Class(Arbiter,proto);
+    exports.Arbiter = Class(Arbiter, proto);
 
 }(exports));

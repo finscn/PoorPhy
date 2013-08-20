@@ -133,6 +133,7 @@
                 arbiter = this[this.collideMethodMap[bodyA.shapeType | bodyB.shapeType]](bodyA, bodyB);
 
             }
+            
             if (arbiter) {
                 if (!this.penetrated[contactKey]) {
                     this.onCollided(bodyA, bodyB, arbiter, timeStep);

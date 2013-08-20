@@ -21,8 +21,8 @@
         allowSleep: true,
 
         timeToSleep: 0.5,
-        minSleepVelSq: 0.75,
-        minSleepVelAng: 0.075,
+        minSleepVelSq: 0.01*0.01,
+        minSleepVelAng: 0.035,
 
         solveIterations: 10,
 
@@ -61,12 +61,15 @@
         checkSleep: function(body, timeStep) {
             if (Math.abs(body.velAng) <= this.minSleepVelAng && Math.pow(body.velX, 2) + Math.pow(body.velY, 2) <= this.minSleepVelSq) {
                 body.sleepTime += timeStep;
+               if (!body.isGround){
+                   // console.log(body._sn,body.sleepTime,this.timeToSleep)
+               }
                 if (body.sleepTime >= this.timeToSleep) {
                     body.sleeping = true;
                     return true;
                 }
             } else {
-                body.awake();
+                // body.awake();
             }
             return false;
         },
