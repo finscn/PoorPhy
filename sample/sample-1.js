@@ -14,8 +14,8 @@ var linearSlop = 0; //0.005;
 var angularSlop = 2.0 / 180.0 * Math.PI;
 
 var friction = 0.3;
-var restitution = 0.2;
-var solveIterations = 5;
+var restitution = 0.25;
+var solveIterations = 10;
 
 
 function initGround() {
@@ -66,8 +66,8 @@ function init() {
         allowSleep: allowSleep
     });
     world.init();
+    world.solveIterations = solveIterations;
     world.collideManager.notSolve = notSolve;
-    world.collideManager.solveIterations = solveIterations;
 
     initRender();
     initGround();
