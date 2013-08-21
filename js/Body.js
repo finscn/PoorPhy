@@ -115,6 +115,10 @@
             this.forceY = y;
         },
 
+        getVelSq : function(){
+            return this.velX*this.velX+this.velY*this.velY;
+        },
+        
         applyForce: function(x, y, point) {
             if (this.bodyType != BodyType.Dynamic) {
                 return;

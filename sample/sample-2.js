@@ -15,23 +15,32 @@ var angularSlop = 2.0 / 180.0 * Math.PI;
 
 var friction = 0.3;
 var restitution = 0.2;
-var solveIterations = 5;
+var solveIterations = 10;
 
 
 function initGround() {
     var w;
 
- 
-    w=createRectBody(20, 1, 10, 14, 0, BodyType.Static)
-
+    w=createRectBody(20, 1, 9, 14, 0, BodyType.Static)
+    w.isGround=true;
 }
 var bb1, bb2, bb3;
 
+var throwBall=true;
 function initBodies() {
-
-    for (var r=0;r<5;r++){
-        for (var c=0;c<5;c++){
-            createRectBody(1.5, 1.5, 9+c*2, 6.2+r*1.6, 0)
+    var w=1.5,h=1.5;
+    var space=0.5;
+    var idx=0;
+    for (var r=0;r<4;r++){
+        for (var c=0;c<4;c++){
+            // createRectBody(1.5, 1.5, 9+c*2, 7.5+r*1.5-1.5/2, 0)
+            if (idx==0){
+                var b=createRectBody(w, h, 9+c*(w+space), 13.5-h/2-r*h, 0)
+            }else{
+                var b=createRectBody(w, h, 9+c*(w+space), 13.5-h/2-r*h, 0)
+            }
+            idx++
+            b.id=idx;
         }
     }
 
@@ -46,8 +55,8 @@ function init() {
         allowSleep: allowSleep
     });
     world.init();
+    world.solveIterations = solveIterations;
     world.collideManager.notSolve = notSolve;
-    world.collideManager.solveIterations = solveIterations;
 
     initRender();
     initGround();
@@ -57,7 +66,7 @@ function init() {
     var count=0; var x=0;
     var frame=0;
     function update() {
-        if (frame===100){
+        if (frame===100 && throwBall){
            var ball= createCircleBody( 1,0,10.5, 0,null,10);
            ball.velAng=0.2;
            ball.setForce(20000,-2000);
