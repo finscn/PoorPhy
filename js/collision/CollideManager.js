@@ -24,12 +24,12 @@
             this.world = world;
 
             this.penetrated = {};
-            this.arbiters = [];
-            this.arbiterCount = 0;
+            this.arbiters = {};
 
             this.update = this.update || this.collideSimple;
             // this.update = this.update || this.collideGrid;
 
+            this.solveTick=0;
         },
 
         collideMethodMap: {
@@ -47,7 +47,7 @@
             var grid = {};
             var cc = 0;
 
-            this.arbiterCount = 0;
+            this.solveTick++;
             var bodies = this.world.bodies;
 
             for (var i = 0, len = bodies.length; i < len; i++) {
@@ -95,7 +95,7 @@
         collideSimple: function(timeStep) {
             var cc = 0;
 
-            this.arbiterCount = 0;
+            this.solveTick++;
             var bodies = this.world.bodies;
 
             for (var i = 0, len = bodies.length; i < len - 1; i++) {
@@ -135,6 +135,13 @@
             }
             
             if (arbiter) {
+                if (bodyA.bodyType!==BodyType.Static){
+                    bodyA.awake();
+                }
+                if (bodyB.bodyType!==BodyType.Static){
+                    bodyB.awake();
+                }
+                arbiter.solveTick=this.solveTick;
                 if (!this.penetrated[contactKey]) {
                     this.onCollided(bodyA, bodyB, arbiter, timeStep);
                     this.penetrated[contactKey] = true;
@@ -148,16 +155,36 @@
             return arbiter;
         },
 
+        preSolve : function(timeStep){
+            var arbiters = this.arbiters;
+            for (var key in arbiters) {
+                var arbiter = arbiters[key];
+                // var ticks = this.solveTick - arbiter.solveTick;
+
+                // if (ticks>3){
+                //     delete arbiters[key]
+                    
+                // }else {
+                //     arbiter.preSolve(timeStep);
+                    
+                // }
+                if (arbiter.solveTick===this.solveTick){
+                    arbiter.preSolve(timeStep);
+                }else{
+                    delete arbiters[key]
+                }
+
+            }
+        },
+
         solve: function(timeStep, iterations, iter) {
             var arbiters = this.arbiters;
-            var arbiterCount=this.arbiterCount;
-            for (var i=0;i<arbiterCount;i++) {
-                var arbiter = arbiters[i];
+            for (var key in arbiters) {
+                var arbiter = arbiters[key];
                 var solved = arbiter.solve(timeStep, iterations, iter);
                 if (solved) {
                     this.onCollideSolve(arbiter, timeStep, iterations, iter)
                 }
-
             }
 
         },
@@ -204,20 +231,18 @@
             ]
             var overlap = rt - distance;
 
+
             var arbiters = this.arbiters;
-            var arbiterCount = this.arbiterCount;
-            if (!arbiters[arbiterCount]) {
-                arbiters[arbiterCount] = new Arbiter();
+            var arbKey=bodyA._sn+"_"+bodyB._sn;
+            var arbiter = arbiters[arbKey];
+            if (!arbiter) {
+                arbiter = arbiters[arbKey] = new Arbiter(bodyA,bodyB);
+            }else{
+                arbiter.first=false;
             }
-            var arbiter = arbiters[arbiterCount++];
-
-            // normalA[2] = centreA[0] * normalA[0] + centreA[1] * normalA[1];
             arbiter.set(bodyA, bodyB, normalA);
-            // arbiter.set(bodyA, bodyB, normalA);
+            arbiter.addContact(contactOnA, contactOnB,overlap);
 
-            arbiter.addContact(contactOnA, contactOnB, overlap);
-
-            this.arbiterCount = arbiterCount;
             return arbiter;
 
 
@@ -269,14 +294,16 @@
             }
 
             var arbiters = this.arbiters;
-            var arbiterCount = this.arbiterCount;
-            if (!arbiters[arbiterCount]) {
-                arbiters[arbiterCount] = new Arbiter();
+            var arbKey=facePoly._sn+"_"+vertPoly._sn;
+            var arbiter = arbiters[arbKey];
+            if (!arbiter) {
+                arbiter = arbiters[arbKey] = new Arbiter(facePoly,vertPoly);
+            }else{
+                arbiter.first=false;
             }
-            var arbiter = arbiters[arbiterCount++];
             arbiter.set(facePoly, vertPoly, faceNormal);
             arbiter.addContact(contactOnFace0, contactOnVert0);
-            this.arbiterCount = arbiterCount;
+
             return arbiter;
         },
 
@@ -454,22 +481,21 @@
                 contactOnFace0 = Polygon.projectPointToEdge(contactOnVert0, faceV0, faceV1);
             }
 
+
             var arbiters = this.arbiters;
-            var arbiterCount = this.arbiterCount;
-
-            if (!arbiters[arbiterCount]) {
-                arbiters[arbiterCount] = new Arbiter();
+            var arbKey=facePoly._sn+"_"+vertPoly._sn;
+            var arbiter = arbiters[arbKey];
+            if (!arbiter) {
+                arbiter = arbiters[arbKey] = new Arbiter(facePoly,vertPoly);
+            }else{
+                arbiter.first=false;
             }
-            var arbiter = arbiters[arbiterCount++];
-
             arbiter.set(facePoly, vertPoly, faceNormal);
-
             arbiter.addContact(contactOnFace0, contactOnVert0);
             if (contactOnFace1) {
                 arbiter.addContact(contactOnFace1, contactOnVert1);
             }
 
-            this.arbiterCount = arbiterCount;
             return arbiter;
         },
 

@@ -14,24 +14,31 @@ var linearSlop = 0; //0.005;
 var angularSlop = 2.0 / 180.0 * Math.PI;
 
 var friction = 0.3;
-var restitution = 0.2;
-var solveIterations = 5;
+var restitution = 0.25;
+var solveIterations = 10;
 
 
 function initGround() {
     var w;
 
- 
-    w=createRectBody(20, 1, 10, 14, 0, BodyType.Static)
-
+    w=createRectBody(20, 1, 9, 14, 0, BodyType.Static)
+    w.isGround=true;
 }
 var bb1, bb2, bb3;
 
 function initBodies() {
-
-    for (var r=0;r<5;r++){
-        for (var c=0;c<5;c++){
-            createRectBody(1.5, 1.5, 9+c*2, 6.2+r*1.6, 0)
+    var w=3,h=3;
+    var idx=0;
+    for (var r=0;r<2;r++){
+        for (var c=0;c<1;c++){
+            // createRectBody(1.5, 1.5, 9+c*2, 7.5+r*1.5-1.5/2, 0)
+            if (idx==0){
+                var b=createRectBody(w, h-0.5, 9+c*w, 13.5-h/2-r*h, 0)
+            }else{
+                var b=createRectBody(w, h-0.5, 9+c*w, 13.5-h/2-r*h, 0)
+            }
+            idx++
+            b.id=idx;
         }
     }
 
@@ -46,8 +53,8 @@ function init() {
         allowSleep: allowSleep
     });
     world.init();
+    world.solveIterations = solveIterations;
     world.collideManager.notSolve = notSolve;
-    world.collideManager.solveIterations = solveIterations;
 
     initRender();
     initGround();
@@ -57,11 +64,11 @@ function init() {
     var count=0; var x=0;
     var frame=0;
     function update() {
-        if (frame===100){
-           var ball= createCircleBody( 1,0,10.5, 0,null,10);
-           ball.velAng=0.2;
-           ball.setForce(20000,-2000);
-        }
+        // if (frame===100){
+        //    var ball= createCircleBody( 1,0,10.5, 0,null,10);
+        //    ball.velAng=0.2;
+        //    ball.setForce(20000,-2000);
+        // }
         frame++;
 
         context.clearRect(0, 0, canvas.width, canvas.height);
@@ -82,7 +89,7 @@ function init() {
             }
         }
 
-        // renderContacts();
+        renderContacts();
     };
 
     function renderContacts() {

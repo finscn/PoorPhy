@@ -69,7 +69,7 @@
                     return true;
                 }
             } else {
-                // body.awake();
+                body.awake();
             }
             return false;
         },
@@ -77,6 +77,7 @@
         solve: function(timeStep) {
             var iterations = this.solveIterations;
             var collideManager=this.collideManager;
+            collideManager.preSolve(timeStep) 
             for (var i = 0; i < iterations; i++) {
                 collideManager.solve(timeStep,iterations,i) 
             }

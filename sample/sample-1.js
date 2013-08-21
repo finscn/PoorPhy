@@ -104,7 +104,7 @@ function init() {
             }
         }
 
-        // renderContacts();
+        renderContacts();
     };
 
     function renderContacts() {
@@ -114,11 +114,13 @@ function init() {
 
         var arbiters = coll.arbiters;
 
-        var arbiterCount = coll.arbiterCount;
-        for (var i = 0; i < arbiterCount; i++) {
+        // var arbiterCount = coll.arbiterCount;
+        // for (var i = 0; i < arbiterCount; i++) {
+        var idx=0;
+        for (var i in arbiters) {
             var arbiter = arbiters[i];
             var contacts = arbiter.contacts;
-            context.strokeStyle = colors[i % 3];
+            context.strokeStyle = colors[idx % 3];
             for (var k = 0; k < contacts.length; k++) {
                 var contact = contacts[k];
                 var p1 = contact.contactOnA,
@@ -126,6 +128,7 @@ function init() {
                 context.strokeRect(p1[0] * RENDER_SCALE - 2, p1[1] * RENDER_SCALE - 2, 4, 4);
                 context.strokeRect(p2[0] * RENDER_SCALE - 2, p2[1] * RENDER_SCALE - 2, 4, 4);
             }
+            idx++;
         }
     }
     window.setInterval(update, 1000 / FPS);
