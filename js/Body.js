@@ -127,7 +127,9 @@
             this.forceX += x;
             this.forceY += y;
 
-            this.forceTorque += ((point[0] - this.centroid[0]) * y - (point[1] - this.centroid[1]) * x);
+            if (point){
+                this.forceTorque += ((point[0] - this.x) * y - (point[1] - this.y) * x) ;
+            }
 
         },
 
@@ -155,6 +157,7 @@
             this.forceTorque += torque;
         },
 
+
         applyImpulse: function(x, y, point) {
             if (this.bodyType != BodyType.Dynamic) {
                 return;
@@ -162,8 +165,9 @@
             this.awake();
             this.velX += this.invMass * x;
             this.velY += this.invMass * y;
-
-            this.velAng += ((point[0] - this.centroid[0]) * y - (point[1] - this.centroid[1]) * x) * this.invInertia;
+            if (point){
+                this.velAng += ((point[0] - this.x) * y - (point[1] - this.y) * x) * this.invInertia;
+            }
         },
 
         awake: function() {

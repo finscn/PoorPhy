@@ -53,7 +53,8 @@
             this.contactCount = this.contacts.length = 0;
 
             this.lastDataA = this.lastDataB = {};
-
+            
+            this.disabled=false;
         },
 
 

@@ -153,11 +153,14 @@
             var arbiterCount=this.arbiterCount;
             for (var i=0;i<arbiterCount;i++) {
                 var arbiter = arbiters[i];
-                var solved = arbiter.solve(timeStep, iterations, iter);
-                if (solved) {
-                    this.onCollideSolve(arbiter, timeStep, iterations, iter)
+                if (!arbiter.disabled){
+                    var solved = arbiter.solve(timeStep, iterations, iter);
+                    if (solved) {
+                        this.onCollideSolve(arbiter, timeStep, iterations, iter)
+                    }
+                }else{
+                    
                 }
-
             }
 
         },
