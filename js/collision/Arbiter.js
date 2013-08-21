@@ -9,19 +9,6 @@
     };
 
 
-    // var prev_dt = this.curr_dt;
-    // this.curr_dt = dt;
-
-
-    // var biasCoef = 1 - Math.pow(this.collisionBias, dt);
-    // con.bias = -bias * min(0, con.dist + slop) / dt;
-    // con.bounce = normal_relative_velocity(a, b, con.r1, con.r2, con.n) * this.e;
-
-
-    // var dt_coef = (prev_dt === 0 ? 0 : dt / prev_dt);
-
-
-
     var proto = {
 
         bodyA: null,
@@ -53,7 +40,7 @@
             this.contactCount = this.contacts.length = 0;
 
             this.lastDataA = this.lastDataB = {};
-            
+
             this.disabled=false;
         },
 
@@ -119,6 +106,7 @@
         isFirstContact: function() {
 
         },
+
         preSolve: function(timeStep, iterations) {
             if (this.isFirstContact()) return;
 
@@ -203,10 +191,12 @@
 
                 if (depth > 0) {
 
+                    // TODO : awake or not ?
                     if (bodyA.bodyType !== BodyType.Static && bodyB.bodyType !== BodyType.Static) {
                         // bodyA.awake();
                         // bodyB.awake();
                     }
+
 
                     // TODO :  improve stability
 
@@ -225,7 +215,6 @@
                     // var dd = depth / this.splittingFrame;
                     // normalRelativeVel += dd / dt;
                     // contact.depth -= dd/iterations;
-
 
                 }
 
