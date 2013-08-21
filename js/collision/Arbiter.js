@@ -233,12 +233,10 @@
                 // bodyB.velY -= (impY * bodyB.invMass);
                 // bodyB.velAng -= (armB[0] * impY - armB[1] * impX) * bodyB.invInertia;
 
-
-
                 // var relativeVel = [
                 //     (bodyA.velX - bodyA.velAng * armA[1]) - (bodyB.velX - bodyB.velAng * armB[1]), (bodyA.velY + bodyA.velAng * armA[0]) - (bodyB.velY + bodyB.velAng * armB[0])
                 // ]
-                
+
                 var tangentRelativeVel = relativeVel[0] * tangent[0] + relativeVel[1] * tangent[1];
 
                 var impT = tangentMass * -tangentRelativeVel;
@@ -258,15 +256,11 @@
                 // bodyB.velAng -= (armB[0] * impY - armB[1] * impX) * bodyB.invInertia;
 
 
-                var impX = normal[0] * impN - normal[1] * impT;
-                var impY = normal[0] * impT + normal[1] * impN;
-
-
+                var impX = normal[0] * impN - normal[1] * impT,
+                    impY = normal[0] * impT + normal[1] * impN;
                 bodyA.velX += (impX * bodyA.invMass);
                 bodyA.velY += (impY * bodyA.invMass);
                 bodyA.velAng += (armA[0] * impY - armA[1] * impX) * bodyA.invInertia;
-
-
                 bodyB.velX -= (impX * bodyB.invMass);
                 bodyB.velY -= (impY * bodyB.invMass);
                 bodyB.velAng -= (armB[0] * impY - armB[1] * impX) * bodyB.invInertia;
