@@ -21,7 +21,9 @@ var solveIterations = 10;
 function initGround() {
     var w;
 
-    w=createRectBody(1, 12, 1, 5, 0, BodyType.Static)
+    w=createRectBody(1, 6, 12, 6, 0, BodyType.Static)
+    w.velAng=0.3;
+    w=createSegmentBody(10, 1, 5, 0, BodyType.Static)
     w.velAng=-0.3;
     w=createRectBody(1, 12, 19, 5, 0, BodyType.Static)
     w=createRectBody(20, 1, 10, 14, 0.1, BodyType.Static)

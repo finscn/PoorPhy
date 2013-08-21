@@ -1,6 +1,7 @@
 var METER_TO_PX = 1;
 var RENDER_SCALE = 30;
 var DEFAULT_COLOR = "#ff0033";
+var scale=1;
 
 function randomInt(min, max) {
     return min+(max - min + 1) * Math.random()>>0;
@@ -93,7 +94,18 @@ function createRect(w, h) {
     return vertices;
 }
 
-function createPolyBody(vertices,x,y,angle,type){
+function createSegment(len){
+    len = len || 1;
+    var vertices = [
+        [-len / 2,0],
+        [len / 2, 0]
+    ];
+
+    return vertices;
+}
+
+function createPolyBody(n,r,x,y,angle,type){
+    var vertices= createPoly(n,r);
     vertices = rotatePoints(vertices, angle||0);
     vertices = translatePoints(vertices, x*scale, y*scale);
 
@@ -107,12 +119,13 @@ function createPolyBody(vertices,x,y,angle,type){
         body.bodyType=type;
     }
     if (body.bodyType===BodyType.Static){
-        body.mass=0;
+        body.mass=Infinity;
     }
     body.init();
     world.addBody(body);
     return body;
 }
+
 function createRectBody(w,h,x,y,angle,type){
     var vertices = createRect(w*scale, h*scale);
         vertices = rotatePoints(vertices, angle||0);
@@ -128,7 +141,31 @@ function createRectBody(w,h,x,y,angle,type){
         body.bodyType=type;
     }
     if (body.bodyType===BodyType.Static){
-        body.mass=0;
+        body.mass=Infinity;
+    }
+    body.init();
+    world.addBody(body);
+    return body;
+
+}
+
+
+function createSegmentBody(len,x,y,angle,type){
+
+    var vertices = createSegment(len*scale);
+        vertices = rotatePoints(vertices, angle||0);
+    vertices = translatePoints(vertices, x*scale, y*scale);
+
+    var body = new Segment({
+        vertices: vertices,
+        friction : friction,
+        restitution : restitution
+    })
+    if (type!==undefined){
+        body.bodyType=type;
+    }
+    if (body.bodyType===BodyType.Static){
+        body.mass=Infinity;
     }
     body.init();
     world.addBody(body);
@@ -151,7 +188,7 @@ function createCircleBody(r,x,y,angle,type,mass){
         body.bodyType=type;
     }
     if (body.bodyType===BodyType.Static){
-        body.mass=0;
+        body.mass=Infinity;
     }
     body.init();
     world.addBody(body);
