@@ -89,6 +89,10 @@
                 len = bodies.length;
             while (i < len) {
                 var body = bodies[i];
+                if (body.parent){
+                    i++;
+                    continue;
+                }
                 if (body._to_remove_) {
                     len--;
                     bodies.splice(i, 1);
@@ -116,7 +120,10 @@
             i = 0;
             while (i < len) {
                 var body = bodies[i];
-
+                if (body.parent){
+                    i++;
+                    continue;
+                }
                 if (!body.sleeping) {
                     body.integrateAngle(timeStep);
                     body.integratePos(timeStep);

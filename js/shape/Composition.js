@@ -181,8 +181,7 @@
         update: function(timeStep) {
             this._updatedCount++;
 
-            this.integrate(timeStep)
-            // this.setAngle(this.angle);
+            this.setAngle(this.angle);
             this.updateVertices();
             this.updateNormals();
 
