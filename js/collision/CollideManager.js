@@ -36,6 +36,9 @@
             1: "circleCircle",
             2: "polyPoly",
             3: "polyCircle",
+            8: "compComp",
+            9: "singleComp",
+            10: "singleComp",
 
         },
 
@@ -114,7 +117,7 @@
             if (bodyA.invMass == 0 && bodyB.invMass == 0) {
                 return null;
             }
-            if (bodyA.parent && bodyA.parent === bodyB.parent) {
+            if (bodyA.parent || bodyB.parent) {
                 return null;
             }
 
@@ -221,12 +224,13 @@
             ]
             var overlap = rt - distance;
 
+            var a=bodyA.parent||bodyA;
+            var b=bodyB.parent||bodyB;
 
-            var arbiter = this.getArbiter(bodyA, bodyB);
+            var arbiter = this.getArbiter(a, b);
 
             // normalA[2] = centreA[0] * normalA[0] + centreA[1] * normalA[1];
-            arbiter.set(bodyA, bodyB, normalA);
-            // arbiter.set(bodyA, bodyB, normalA);
+            arbiter.set(a, b, normalA);
 
             arbiter.addContact(contactOnA, contactOnB, overlap);
 
@@ -280,10 +284,14 @@
 
             }
 
-            var arbiter = this.getArbiter(facePoly, vertPoly);
+            var a=facePoly.parent||facePoly;
+            var b=vertPoly.parent||vertPoly;
 
-            arbiter.set(facePoly, vertPoly, faceNormal);
+            var arbiter = this.getArbiter(a, b);
+            arbiter.set(a, b, faceNormal);
+
             arbiter.addContact(contactOnFace0, contactOnVert0);
+
             return arbiter;
         },
 
@@ -461,9 +469,11 @@
                 contactOnFace0 = Polygon.projectPointToEdge(contactOnVert0, faceV0, faceV1);
             }
 
-            var arbiter = this.getArbiter(facePoly, vertPoly);
+            var a=facePoly.parent||facePoly;
+            var b=vertPoly.parent||vertPoly;
 
-            arbiter.set(facePoly, vertPoly, faceNormal);
+            var arbiter = this.getArbiter(a, b);
+            arbiter.set(a, b, faceNormal);
 
             arbiter.addContact(contactOnFace0, contactOnVert0);
             if (contactOnFace1) {
@@ -594,6 +604,34 @@
             };
 
             return result;
+        },
+
+        singleComp : function(bodyA, bodyB){
+
+            var single, comp;
+            if (bodyA.shapeType == ShapeType.Comp) {
+                single = bodyB;
+                comp = bodyA;
+            } else {
+                single = bodyA;
+                comp = bodyB;
+            }
+
+            var shapes=comp.shapes;
+            var arbiter=false;
+            for (var i=0;i<shapes.length;i++){
+                var _shape=shapes[i];
+                var arb = this[this.collideMethodMap[single.shapeType | _shape.shapeType]](single, _shape);
+                if (arb){
+                    arbiter=arb;
+                }
+            }
+
+            return arbiter;
+        },
+
+        compComp : function(){
+
         },
 
 

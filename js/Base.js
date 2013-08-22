@@ -62,7 +62,9 @@
 
         Poly: 2,
 
-        Edge: 4,
+        Segment: 4,
+
+        Comp : 8
 
     };
 

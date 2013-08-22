@@ -16,13 +16,10 @@
 
         shapes: null, // []
 
+        shapeType: ShapeType.Comp,
+
         init: function() {
-            var Me=this;
-            this.movement={
-                velX : 0,
-                velY : 0,
-                velAng : 0,
-            }
+            var Me = this;
 
             this.shapes = this.shapes || [];
             this.shapes.forEach(function(s) {
@@ -36,85 +33,90 @@
                 var cx = s.x;
                 var cy = s.y;
                 s.translateCentroid(x - cx, y - cy);
-                s.movement=Me.movement;
-                s.parent=Me;
+                s.parent = Me;
             });
 
 
             this.x = x;
             this.y = y;
 
-            this.last={};
-            this.aabb = [0,0,0,0];
+            this.last = {};
+            this.aabb = [0, 0, 0, 0];
             // this.initLocalData();
         },
 
 
         initMassData: function() {
 
-            var mass=0,
-                inertia=0;
+            var mass = 0,
+                inertia = 0,
+                area =0;
 
             var shapes = this.shapes;
             var len = shapes.length;
 
-            if (len < 3) {
-                c = [(shapes[0].x + shapes[1].x) / 2, (shapes[0].y + shapes[1].y) / 2];
-                this.originalCentroid = c;
-                return c;
-            }
 
             var ac = [0, 0];
             for (var i = 0; i < len; ++i) {
                 var s = shapes[i];
-                mass+=s.mass;
-                inertia+=s.inertia;
+                mass += s.mass;
+                inertia += s.inertia;
+                area += s.area;
                 ac[0] += s.x;
                 ac[1] += s.y;
             }
             ac[0] /= len;
             ac[1] /= len;
 
-            var c = [0, 0];
 
-            var area2 = 0;
+            var c;
+            if (len < 3) {
+                c = [(shapes[0].x + shapes[1].x) / 2, (shapes[0].y + shapes[1].y) / 2];
+                // return c;
+            } else {
+                c = [0, 0];
 
-            var originalInertia = 0;
+                var area2 = 0;
 
-            var s0 = shapes[len - 1];
-            var x1 = s0.x - ac[0],
-                y1 = s0.y - ac[1];
+                var originalInertia = 0;
 
-            for (var i = 0; i < len; ++i) {
+                var s0 = shapes[len - 1];
+                var x1 = s0.x - ac[0],
+                    y1 = s0.y - ac[1];
 
-                var s1 = shapes[i];
-                var x2 = s1.x - ac[0],
-                    y2 = s1.y - ac[1];
+                for (var i = 0; i < len; ++i) {
+
+                    var s1 = shapes[i];
+                    var x2 = s1.x - ac[0],
+                        y2 = s1.y - ac[1];
 
 
-                var triangleArea2 = (x1 * y2 - y1 * x2);
-                area2 += triangleArea2;
+                    var triangleArea2 = (x1 * y2 - y1 * x2);
+                    area2 += triangleArea2;
 
-                c[0] += triangleArea2 * (x1 + x2);
-                c[1] += triangleArea2 * (y1 + y2);
+                    c[0] += triangleArea2 * (x1 + x2);
+                    c[1] += triangleArea2 * (y1 + y2);
 
-                var inertiaX = (x1 * x1 + x1 * x2 + x2 * x2);
-                var inertiaY = (y1 * y1 + y1 * y2 + y2 * y2);
+                    var inertiaX = (x1 * x1 + x1 * x2 + x2 * x2);
+                    var inertiaY = (y1 * y1 + y1 * y2 + y2 * y2);
 
-                originalInertia += triangleArea2 * (inertiaX + inertiaY);
+                    originalInertia += triangleArea2 * (inertiaX + inertiaY);
 
-                x1 = x2;
-                y1 = y2;
+                    x1 = x2;
+                    y1 = y2;
+                }
+
+
+                c[0] = c[0] / (area2 * 3) + ac[0];
+                c[1] = c[1] / (area2 * 3) + ac[1];
+
             }
 
-
-            c[0] = c[0] / (area2 * 3) + ac[0];
-            c[1] = c[1] / (area2 * 3) + ac[1];
+            this.area=area;
             this.originalCentroid = c;
 
             this.setMass(mass);
             this.setInertia(inertia);
-
 
             return c;
 
@@ -190,7 +192,7 @@
             this.y = y;
 
             this.shapes.forEach(function(s) {
-                s.setPos(x,y);
+                s.setPos(x, y);
             })
         },
         setAngle: function(angle) {
@@ -206,6 +208,7 @@
         addShape: function(shape) {
             this.shapes = this.shapes || [];
             this.shapes.push(shape);
+            shape.parent = this;
         }
     }
 

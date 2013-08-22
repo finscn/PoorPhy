@@ -26,8 +26,6 @@
         velY: 0,
         velAng: 0,
 
-        movement : null, // {}
-
         forceX: 0,
         forceY: 0,
         forceTorque: 0,
