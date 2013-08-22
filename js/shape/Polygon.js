@@ -32,38 +32,39 @@
         init: function() {
             this.initMassData();
 
-            if (this.x===null){
-                this.x=this.originalCentroid[0];
+            if (this.x === null) {
+                this.x = this.originalCentroid[0];
             }
-            if (this.y===null){
-                this.y=this.originalCentroid[1];
+            if (this.y === null) {
+                this.y = this.originalCentroid[1];
             }
-            this.setAngle(this.angle||0);
+            this.setAngle(this.angle || 0);
 
             this.vertexCount = this.vertices.length;
-            this.normals=Polygon.computeNormals(this.vertices);
+            this.normals = Polygon.computeNormals(this.vertices);
 
-            this.last={};
-            this.aabb = [0,0,0,0];
+            this.last = {};
+            this.aabb = [0, 0, 0, 0];
             this.initLocalData();
 
         },
 
-        initLocalData : function(){
+        initLocalData: function() {
 
             var minX = Number.MAX_VALUE,
                 minY = Number.MAX_VALUE;
             var maxX = -minX,
                 maxY = -minY;
 
-            var vc=this.vertexCount;
-            this.localVertices=[]
+            var vc = this.vertexCount;
+            this.localVertices = []
             for (var i = 0; i < vc; i++) {
                 var v = this.vertices[i];
-                var ox=v[0] - this.x,  oy=v[1] - this.y;
+                var ox = v[0] - this.x,
+                    oy = v[1] - this.y;
                 var x = ox * this.cos + oy * this.sin;
                 var y = -ox * this.sin + oy * this.cos;
-                this.localVertices.push([x,y]);
+                this.localVertices.push([x, y]);
 
                 if (v[0] < minX) {
                     minX = v[0];
@@ -80,13 +81,14 @@
                     maxY = v[1];
                 }
             }
-            var oc=this.originalCentroid;
-            var ox=oc[0] - this.x,  oy=oc[1] - this.y;
+            var oc = this.originalCentroid;
+            var ox = oc[0] - this.x,
+                oy = oc[1] - this.y;
             var x = ox * this.cos + oy * this.sin;
             var y = -ox * this.sin + oy * this.cos;
-            this.localOriginalCentroid=[x,y];
-            
-            this.localNormals=Polygon.computeNormals(this.localVertices);
+            this.localOriginalCentroid = [x, y];
+
+            this.localNormals = Polygon.computeNormals(this.localVertices);
             this.aabb[0] = minX - this.aabbExtension;
             this.aabb[1] = minY - this.aabbExtension;
             this.aabb[2] = maxX + this.aabbExtension;
@@ -99,14 +101,14 @@
             var vertices = this.vertices;
             var len = vertices.length;
 
-            var ac=[0,0];
+            var ac = [0, 0];
             for (var i = 0; i < len; ++i) {
                 var v = vertices[i];
-                ac[0]+=v[0];
-                ac[1]+=v[1];
+                ac[0] += v[0];
+                ac[1] += v[1];
             }
-            ac[0]/=len;
-            ac[1]/=len;
+            ac[0] /= len;
+            ac[1] /= len;
 
 
             var c = [0, 0];
@@ -116,13 +118,13 @@
             var originalInertia = 0;
 
             var v0 = vertices[len - 1];
-            var x1 = v0[0]-ac[0],
-                y1 = v0[1]-ac[1];
+            var x1 = v0[0] - ac[0],
+                y1 = v0[1] - ac[1];
             for (var i = 0; i < len; ++i) {
 
                 var v1 = vertices[i];
-                var x2 = v1[0]-ac[0],
-                    y2 = v1[1]-ac[1];
+                var x2 = v1[0] - ac[0],
+                    y2 = v1[1] - ac[1];
 
                 var triangleArea2 = (x1 * y2 - y1 * x2);
                 area2 += triangleArea2;
@@ -140,28 +142,28 @@
             }
 
 
-            c[0] =  c[0] / (area2 * 3) +ac[0];
-            c[1] =  c[1] / (area2 * 3) +ac[1];
+            c[0] = c[0] / (area2 * 3) + ac[0];
+            c[1] = c[1] / (area2 * 3) + ac[1];
             this.originalCentroid = c;
 
             this.density = this.density || 1;
             this.area = area2 / 2;
 
             this.setMass(this.mass);
-            this.originalInertia = originalInertia/12 * this.density;
-            this.setInertia(this.inertia!==null?this.inertia:this.originalInertia);
+            this.originalInertia = originalInertia / 12 * this.density;
+            this.setInertia(this.inertia !== null ? this.inertia : this.originalInertia);
 
         },
 
-        translateCentroid : function(x,y){
-            this.x+=x;
-            this.y+=y;
-            var localVertices=this.localVertices;
+        translateCentroid: function(x, y) {
+            this.x += x;
+            this.y += y;
+            var localVertices = this.localVertices;
             var len = localVertices.length;
-            for (var i=0;i<len;i++){
-                var local=localVertices[i];
-                local[0]-=x;
-                local[1]-=y;
+            for (var i = 0; i < len; i++) {
+                var local = localVertices[i];
+                local[0] -= x;
+                local[1] -= y;
             }
         },
 
@@ -229,6 +231,79 @@
 
         },
 
+        updateAABB: function() {
+            var minX = Number.MAX_VALUE,
+                minY = Number.MAX_VALUE;
+            var maxX = -minX,
+                maxY = -minY;
+
+            for (var i = 0; i < this.vertexCount; i++) {
+                var v = this.vertices[i];
+
+                if (v[0] < minX) {
+                    minX = v[0];
+                }
+
+                if (v[0] > maxX) {
+                    maxX = v[0];
+                }
+
+                if (v[1] < minY) {
+                    minY = v[1];
+                }
+                if (v[1] > maxY) {
+                    maxY = v[1];
+                }
+            }
+            this.aabb[0] = minX - this.aabbExtension;
+            this.aabb[1] = minY - this.aabbExtension;
+            this.aabb[2] = maxX + this.aabbExtension;
+            this.aabb[3] = maxY + this.aabbExtension;
+
+        },
+
+        containPoint: function(x, y) {
+            var vertices = this.vertices;
+            var normals = this.normals;
+            var len = vertices.length;
+            var p = vertices[len - 1],
+                px = p[0],
+                py = p[1];
+            var found = 0;
+
+            for (var i = 0; i < len; i++) {
+                var q = vertices[i],
+                    qx = q[0],
+                    qy = q[1];
+
+
+                var minX, maxX;
+                if (px < qx) {
+                    minX = px;
+                    maxX = qx;
+                } else {
+                    minX = qx;
+                    maxX = px;
+                }
+
+                if (x >= minX && x <= maxX) {
+                    var n = normals[i];
+                    var det = n[0] * x + n[1] * y - n[2];
+                    if (det > 0) {
+                        return false;
+                    }
+                    if (found == 1) {
+                        return true;
+                    }
+                    found++; // one edge found.
+                }
+
+                px = qx;
+                py = qy;
+            }
+
+            return false;
+        },
 
     };
 
@@ -279,49 +354,11 @@
         }
         normals.push(normals.shift());
         return normals;
-    }
-
-
-    Polygon.containPoint = function(vertices, x, y) {
-        var len = vertices.length;
-        var p = vertices[len - 1],
-            px = p[0],
-            py = p[1];
-        var found = 0;
-
-        for (var i = 0; i < len; i++) {
-            var q = vertices[i],
-                qx = q[0],
-                qy = q[1];
-
-            var minX, maxX;
-            if (px < qx) {
-                minX = px;
-                maxX = qx;
-            } else {
-                minX = qx;
-                maxX = px;
-            }
-
-            if (x >= minX && x <= maxX) {
-                var det = (qy - py) * (x - px) + (px - qx) * (y - py);
-                if (det >= 0) {
-                    return false;
-                }
-                if (found == 1) {
-                    return true;
-                }
-                found++; // one edge found.
-            }
-
-            px = qx;
-            py = qy;
-        }
-
-        return false;
     };
 
-    exports.Polygon = Class(Polygon,proto);
+
+
+    exports.Polygon = Class(Polygon, proto);
 
 
 }(exports));

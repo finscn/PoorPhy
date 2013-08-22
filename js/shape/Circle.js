@@ -109,8 +109,17 @@
             this.aabb[2] = x + b;
             this.aabb[3] = y + b;
         },
+        
+        containPoint : function(x, y) {
+            var dx=x-this.centre[0],
+                dy=y-this.center[1];
 
+            return (dx*dx+dy*dy)<this.radiusSq;
+        },
     };
+
+
+
 
     exports.Circle = Class(Circle,proto);
 
