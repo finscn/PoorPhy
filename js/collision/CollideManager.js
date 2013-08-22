@@ -27,8 +27,8 @@
             this.arbiters = [];
             this.arbiterCount = 0;
 
-            this.update = this.update || this.collideSimple;
-            // this.update = this.update || this.collideGrid;
+            this.collide = this.collide || this.collideSimple;
+            // this.collide = this.collide || this.collideGrid;
 
         },
 
@@ -42,12 +42,13 @@
         collideCount: 0,
         collideGrid: function(timeStep) {
 
+            var cc = 0;
+
             var gridCellSize = this.gridCellSize;
             var gridCol = this.gridCol;
             var grid = {};
-            var cc = 0;
 
-            this.arbiterCount = 0;
+
             var bodies = this.world.bodies;
 
             for (var i = 0, len = bodies.length; i < len; i++) {
@@ -86,16 +87,12 @@
                     startIdx += gridCol;
                 }
             }
-            if (cc > this.collideCount) {
-                this.collideCount = cc;
-                // console.log(len,cc);
-            }
+            return cc;
         },
 
         collideSimple: function(timeStep) {
             var cc = 0;
 
-            this.arbiterCount = 0;
             var bodies = this.world.bodies;
 
             for (var i = 0, len = bodies.length; i < len - 1; i++) {
@@ -107,10 +104,7 @@
 
                 }
             }
-            if (cc > this.collideCount) {
-                this.collideCount = cc;
-                // console.log(len,cc);
-            }
+            return cc;
         },
 
         collideTowBodies: function(bodyA, bodyB, timeStep) {
@@ -146,6 +140,26 @@
                 }
             }
             return arbiter;
+        },
+
+        getArbiter : function(bodyA,bodyB){
+
+            var arbiters = this.arbiters;
+            var arbiterCount = this.arbiterCount;
+            if (!arbiters[arbiterCount]) {
+                arbiters[arbiterCount] = new Arbiter();
+            }
+            var arbiter = arbiters[arbiterCount++];
+            this.arbiterCount = arbiterCount;
+            return arbiter;
+        },
+
+        update : function(timeStep){
+
+            this.arbiterCount = 0;
+            var cc=this.collide(timeStep);
+            // console.log("collide-test count : ",cc);
+
         },
 
         solve: function(timeStep, iterations, iter) {
@@ -207,12 +221,8 @@
             ]
             var overlap = rt - distance;
 
-            var arbiters = this.arbiters;
-            var arbiterCount = this.arbiterCount;
-            if (!arbiters[arbiterCount]) {
-                arbiters[arbiterCount] = new Arbiter();
-            }
-            var arbiter = arbiters[arbiterCount++];
+
+            var arbiter = this.getArbiter(bodyA, bodyB);
 
             // normalA[2] = centreA[0] * normalA[0] + centreA[1] * normalA[1];
             arbiter.set(bodyA, bodyB, normalA);
@@ -220,7 +230,6 @@
 
             arbiter.addContact(contactOnA, contactOnB, overlap);
 
-            this.arbiterCount = arbiterCount;
             return arbiter;
 
 
@@ -271,15 +280,10 @@
 
             }
 
-            var arbiters = this.arbiters;
-            var arbiterCount = this.arbiterCount;
-            if (!arbiters[arbiterCount]) {
-                arbiters[arbiterCount] = new Arbiter();
-            }
-            var arbiter = arbiters[arbiterCount++];
+            var arbiter = this.getArbiter(facePoly, vertPoly);
+
             arbiter.set(facePoly, vertPoly, faceNormal);
             arbiter.addContact(contactOnFace0, contactOnVert0);
-            this.arbiterCount = arbiterCount;
             return arbiter;
         },
 
@@ -457,13 +461,7 @@
                 contactOnFace0 = Polygon.projectPointToEdge(contactOnVert0, faceV0, faceV1);
             }
 
-            var arbiters = this.arbiters;
-            var arbiterCount = this.arbiterCount;
-
-            if (!arbiters[arbiterCount]) {
-                arbiters[arbiterCount] = new Arbiter();
-            }
-            var arbiter = arbiters[arbiterCount++];
+            var arbiter = this.getArbiter(facePoly, vertPoly);
 
             arbiter.set(facePoly, vertPoly, faceNormal);
 
@@ -472,7 +470,6 @@
                 arbiter.addContact(contactOnFace1, contactOnVert1);
             }
 
-            this.arbiterCount = arbiterCount;
             return arbiter;
         },
 
