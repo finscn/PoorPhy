@@ -148,9 +148,9 @@
 
             this.density = this.density || 1;
             this.area = area2 / 2;
+            this.originalInertia = originalInertia / 12 * this.density;
 
             this.setMass(this.mass);
-            this.originalInertia = originalInertia / 12 * this.density;
             this.setInertia(this.inertia !== null ? this.inertia : this.originalInertia);
 
         },
