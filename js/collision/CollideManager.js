@@ -122,9 +122,9 @@
             }
 
             var contactKey = bodyA.id + "_" + bodyB.id;
+            var arbiter = false;
             var boxA = bodyA.aabb,
                 boxB = bodyB.aabb;
-            var arbiter = false;
             if (boxA[0] < boxB[2] && boxA[2] > boxB[0] && boxA[1] < boxB[3] && boxA[3] > boxB[1]) {
 
                 arbiter = this[this.collideMethodMap[bodyA.shapeType | bodyB.shapeType]](bodyA, bodyB);
@@ -619,11 +619,15 @@
 
             var shapes = comp.shapes;
             var arbiter = false;
+            var boxA = single.aabb;
             for (var i = 0; i < shapes.length; i++) {
                 var _shape = shapes[i];
-                var arb = this[this.collideMethodMap[single.shapeType | _shape.shapeType]](single, _shape);
-                if (arb) {
-                    arbiter = arb;
+                var boxB = _shape.aabb;
+                if (boxA[0] < boxB[2] && boxA[2] > boxB[0] && boxA[1] < boxB[3] && boxA[3] > boxB[1]) {
+                    var arb = this[this.collideMethodMap[single.shapeType | _shape.shapeType]](single, _shape);
+                    if (arb) {
+                        arbiter = arb;
+                    }
                 }
             }
 
@@ -636,13 +640,17 @@
             var arbiter = false;
             for (var i = 0; i < shapesA.length; i++) {
                 var _shapeA = shapesA[i];
+                var boxA = _shapeA.aabb;
 
                 for (var j = 0; j < shapesB.length; j++) {
                     var _shapeB = shapesB[j];
+                    var boxB = _shapeB.aabb;
 
-                    var arb = this[this.collideMethodMap[_shapeA.shapeType | _shapeB.shapeType]](_shapeA, _shapeB);
-                    if (arb) {
-                        arbiter = arb;
+                    if (boxA[0] < boxB[2] && boxA[2] > boxB[0] && boxA[1] < boxB[3] && boxA[3] > boxB[1]) {
+                        var arb = this[this.collideMethodMap[_shapeA.shapeType | _shapeB.shapeType]](_shapeA, _shapeB);
+                        if (arb) {
+                            arbiter = arb;
+                        }
                     }
                 }
             }
