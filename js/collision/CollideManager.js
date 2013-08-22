@@ -130,7 +130,7 @@
                 arbiter = this[this.collideMethodMap[bodyA.shapeType | bodyB.shapeType]](bodyA, bodyB);
 
             }
-            
+
             if (arbiter) {
                 if (!this.penetrated[contactKey]) {
                     this.onCollided(bodyA, bodyB, arbiter, timeStep);
@@ -145,7 +145,7 @@
             return arbiter;
         },
 
-        getArbiter : function(bodyA,bodyB){
+        getArbiter: function(bodyA, bodyB) {
 
             var arbiters = this.arbiters;
             var arbiterCount = this.arbiterCount;
@@ -157,26 +157,26 @@
             return arbiter;
         },
 
-        update : function(timeStep){
+        update: function(timeStep) {
 
             this.arbiterCount = 0;
-            var cc=this.collide(timeStep);
+            var cc = this.collide(timeStep);
             // console.log("collide-test count : ",cc);
 
         },
 
         solve: function(timeStep, iterations, iter) {
             var arbiters = this.arbiters;
-            var arbiterCount=this.arbiterCount;
-            for (var i=0;i<arbiterCount;i++) {
+            var arbiterCount = this.arbiterCount;
+            for (var i = 0; i < arbiterCount; i++) {
                 var arbiter = arbiters[i];
-                if (!arbiter.disabled){
+                if (!arbiter.disabled) {
                     var solved = arbiter.solve(timeStep, iterations, iter);
                     if (solved) {
                         this.onCollideSolve(arbiter, timeStep, iterations, iter)
                     }
-                }else{
-                    
+                } else {
+
                 }
             }
 
@@ -224,8 +224,8 @@
             ]
             var overlap = rt - distance;
 
-            var a=bodyA.parent||bodyA;
-            var b=bodyB.parent||bodyB;
+            var a = bodyA.parent || bodyA;
+            var b = bodyB.parent || bodyB;
 
             var arbiter = this.getArbiter(a, b);
 
@@ -284,8 +284,8 @@
 
             }
 
-            var a=facePoly.parent||facePoly;
-            var b=vertPoly.parent||vertPoly;
+            var a = facePoly.parent || facePoly;
+            var b = vertPoly.parent || vertPoly;
 
             var arbiter = this.getArbiter(a, b);
             arbiter.set(a, b, faceNormal);
@@ -469,8 +469,8 @@
                 contactOnFace0 = Polygon.projectPointToEdge(contactOnVert0, faceV0, faceV1);
             }
 
-            var a=facePoly.parent||facePoly;
-            var b=vertPoly.parent||vertPoly;
+            var a = facePoly.parent || facePoly;
+            var b = vertPoly.parent || vertPoly;
 
             var arbiter = this.getArbiter(a, b);
             arbiter.set(a, b, faceNormal);
@@ -606,7 +606,7 @@
             return result;
         },
 
-        singleComp : function(bodyA, bodyB){
+        singleComp: function(bodyA, bodyB) {
 
             var single, comp;
             if (bodyA.shapeType == ShapeType.Comp) {
@@ -617,21 +617,36 @@
                 comp = bodyB;
             }
 
-            var shapes=comp.shapes;
-            var arbiter=false;
-            for (var i=0;i<shapes.length;i++){
-                var _shape=shapes[i];
+            var shapes = comp.shapes;
+            var arbiter = false;
+            for (var i = 0; i < shapes.length; i++) {
+                var _shape = shapes[i];
                 var arb = this[this.collideMethodMap[single.shapeType | _shape.shapeType]](single, _shape);
-                if (arb){
-                    arbiter=arb;
+                if (arb) {
+                    arbiter = arb;
                 }
             }
 
             return arbiter;
         },
 
-        compComp : function(){
+        compComp: function(bodyA, bodyB) {
+            var shapesA = bodyA.shapes;
+            var shapesB = bodyB.shapes;
+            var arbiter = false;
+            for (var i = 0; i < shapesA.length; i++) {
+                var _shapeA = shapesA[i];
 
+                for (var j = 0; j < shapesB.length; j++) {
+                    var _shapeB = shapesB[j];
+
+                    var arb = this[this.collideMethodMap[_shapeA.shapeType | _shapeB.shapeType]](_shapeA, _shapeB);
+                    if (arb) {
+                        arbiter = arb;
+                    }
+                }
+            }
+            return arbiter;
         },
 
 
