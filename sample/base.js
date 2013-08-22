@@ -104,8 +104,19 @@ function createSegment(len){
     return vertices;
 }
 
+
 function createPolyBody(n,r,x,y,angle,type){
-    var vertices= createPoly(n,r);
+// function createPolyBody(vertices,x,y,angle,type){
+    var vertices;
+    if (Array.isArray(n)){
+        vertices=n;
+        type=angle;
+        angle=y;
+        y=x;
+        x=r;
+    }else{
+        vertices= createPoly(n,r);
+    }
     vertices = rotatePoints(vertices, angle||0);
     vertices = translatePoints(vertices, x*scale, y*scale);
 
