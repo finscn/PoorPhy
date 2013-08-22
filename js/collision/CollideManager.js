@@ -37,8 +37,8 @@
             2: "polyPoly",
             3: "polyCircle",
             8: "compComp",
-            9: "singleComp",
-            10: "singleComp",
+            9: "compSingle",
+            10: "compSingle",
 
         },
 
@@ -606,15 +606,15 @@
             return result;
         },
 
-        singleComp: function(bodyA, bodyB) {
+        compSingle: function(bodyA, bodyB) {
 
-            var single, comp;
-            if (bodyA.shapeType == ShapeType.Comp) {
-                single = bodyB;
-                comp = bodyA;
-            } else {
-                single = bodyA;
+            var comp, single;
+            if (bodyB.shapeType == ShapeType.Comp) {
                 comp = bodyB;
+                single = bodyA;
+            } else {
+                comp = bodyA;
+                single = bodyB;
             }
 
             var shapes = comp.shapes;
