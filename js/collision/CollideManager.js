@@ -417,7 +417,6 @@
 
         polyPoly: function(bodyA, bodyB) {
 
-
             var vertPoly, facePoly, faceIdx, faceNormal;
             var vertV0, vertV1, faceV0, faceV1;
             var face, vertex, fpcFlag;
@@ -616,13 +615,14 @@
                 comp = bodyA;
                 single = bodyB;
             }
-
             var shapes = comp.shapes;
+
             var arbiter = false;
-            var boxA = single.aabb;
+            var boxB = single.aabb;
             for (var i = 0; i < shapes.length; i++) {
                 var _shape = shapes[i];
-                var boxB = _shape.aabb;
+                var boxA = _shape.aabb;
+
                 if (boxA[0] < boxB[2] && boxA[2] > boxB[0] && boxA[1] < boxB[3] && boxA[3] > boxB[1]) {
                     var arb = this[this.collideMethodMap[single.shapeType | _shape.shapeType]](single, _shape);
                     if (arb) {
@@ -630,13 +630,14 @@
                     }
                 }
             }
-
             return arbiter;
         },
 
         compComp: function(bodyA, bodyB) {
+
             var shapesA = bodyA.shapes;
             var shapesB = bodyB.shapes;
+
             var arbiter = false;
             for (var i = 0; i < shapesA.length; i++) {
                 var _shapeA = shapesA[i];
