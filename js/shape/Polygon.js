@@ -271,6 +271,8 @@
                 py = p[1];
             var found = 0;
 
+            var n=normals[len-1];
+
             for (var i = 0; i < len; i++) {
                 var q = vertices[i],
                     qx = q[0],
@@ -287,17 +289,17 @@
                 }
 
                 if (x >= minX && x <= maxX) {
-                    var n = normals[i];
                     var det = n[0] * x + n[1] * y - n[2];
                     if (det > 0) {
                         return false;
                     }
                     if (found == 1) {
+                        console.log("containPoint true")
                         return true;
                     }
                     found++; // one edge found.
                 }
-
+                n=normals[i];
                 px = qx;
                 py = qy;
             }
