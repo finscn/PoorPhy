@@ -85,7 +85,7 @@
             // var equalizedMass = !denom ? 0 : 1 / denom;
 
             var velocityBias = null;
-debugger
+
             var contact = {
                 contactOnA: contactOnA,
                 contactOnB: contactOnB,
