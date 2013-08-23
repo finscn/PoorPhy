@@ -4,23 +4,18 @@ var FPS = 60;
 var timeStep = 1 / 60;
 var RENDER_SCALE = 30;
 var scale = 1;
-var allowSleep = true;
 var notSolve = false;
+var allowSleep = false;
 
-var gravity = 10;
-var damping = 0;
-
-var linearSlop = 0; //0.005;
-var angularSlop = 2.0 / 180.0 * Math.PI;
-
-var friction = 0.3;
-var restitution = 0.2;
 var solveIterations = 10;
-
+var damping = 0.05;
+var dampingAng = 0.05;
+var friction = 0.3;
+var restitution = 0.25;
+var gravity = 9.5;
 
 function initGround() {
     var w;
-
     w=createRectBody(20, 1, 9, 14, 0, BodyType.Static)
     w.isGround=true;
 }
@@ -68,14 +63,12 @@ function init() {
     function update() {
         if (frame===100 && throwBall){
            var ball= createCircleBody( 1,0,10.5, 0,null,10);
-           ball.velAng=0.2;
+           // ball.velAng=0.2;
            ball.setForce(20000,-2000);
         }
         frame++;
 
         context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // console.log(bb1.velY, bb1.velY*timeStep,bb1.y)
 
         world.step(timeStep);
 
@@ -99,9 +92,20 @@ function initRender() {
 Body.prototype.friction = friction;
 Body.prototype.restitution = restitution;
 Body.prototype.damping = damping;
+Body.prototype.dampingAng = dampingAng;
 Circle.prototype.friction = friction;
 Circle.prototype.restitution = restitution;
 Circle.prototype.damping = damping;
+Circle.prototype.dampingAng = dampingAng;
 Polygon.prototype.friction = friction;
 Polygon.prototype.restitution = restitution;
 Polygon.prototype.damping = damping;
+Polygon.prototype.dampingAng = dampingAng;
+Segment.prototype.friction = friction;
+Segment.prototype.restitution = restitution;
+Segment.prototype.damping = damping;
+Segment.prototype.dampingAng = dampingAng;
+Composition.prototype.friction = friction;
+Composition.prototype.restitution = restitution;
+Composition.prototype.damping = damping;
+Composition.prototype.dampingAng = dampingAng;

@@ -15,27 +15,30 @@ var restitution = 0.25;
 var gravity = 9.5;
 
 
-
 function initGround() {
-    var w;
-    w=createRectBody(1, 6, 12, 6, 0, BodyType.Static)
-    w.velAng=0.3;
-    w=createSegmentBody(10, 1, 5, 0, BodyType.Static)
-    w.velAng=-0.3;
-    w=createRectBody(1, 12, 19, 5, 0, BodyType.Static)
-    w=createRectBody(20, 1, 10, 14, 0.1, BodyType.Static)
+
+    createRectBody(1, 12, 1, 7.5, 0, BodyType.Static)
+    createRectBody(1, 12, 19, 7.5, 0, BodyType.Static)
+    createRectBody(20, 1, 10, 14, 0, BodyType.Static)
 
     // createCircleBody(10, -7, 8, 0, BodyType.Static)
     // createCircleBody(10, 27, 8, 0, BodyType.Static)
     // createCircleBody(8, 10, 20, 0, BodyType.Static)
 
 }
-var bb1, bb2, bb3;
 
 function initBodies() {
 
-
-
+    var b1 = createRectBody(2, 5, 9.5, 4, 0, null, false);
+    var b2 = createRectBody(3, 1, 12, 2, 0,null, false);
+    var cmp = new Composition({
+        shapes: [
+            b1, b2
+        ]
+    })
+    cmp.init();
+    cmp.setAngle(0.5)
+    world.addBody(cmp);
 }
 
 
@@ -50,36 +53,28 @@ function init() {
     world.solveIterations = solveIterations;
     world.collideManager.notSolve = notSolve;
 
+
     initRender();
     initGround();
     initBodies();
 
-
-    var count=0; var x=0;
-    var frame=0;
     function update() {
-        if (frame%100===0){
-            if (x>8){
-                x=0;
-            }
-            x=x+randomInt(2,3.5);
-            createRandomShape(2.5,2.5, x+2, randomInt(-3,-1));
-        }
-        frame++;
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        // console.log(bb1.velY, bb1.velY*timeStep,bb1.y)
+        // cmp.update(1 / 60)
+        // drawPoly(context, cmp, "red");
+        // drawPoint(context, cmp.x, cmp.y);
+
 
         world.step(timeStep);
 
         var bodies = world.bodies;
         drawBodies(context,bodies);
-
-        // drawArbiter(context,world.collideManager);
         
-    };
+        // drawArbiter(context,world.collideManager);
 
+    };
 
     window.setInterval(update, 1000 / FPS);
 
