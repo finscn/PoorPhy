@@ -117,9 +117,7 @@
             if (bodyA.invMass == 0 && bodyB.invMass == 0) {
                 return null;
             }
-            if (bodyA.parent || bodyB.parent) {
-                return null;
-            }
+
 
             var contactKey = bodyA.id + "_" + bodyB.id;
             var arbiter = false;
@@ -224,8 +222,8 @@
             ]
             var overlap = rt - distance;
 
-            var a = bodyA.parent || bodyA;
-            var b = bodyB.parent || bodyB;
+            var a = bodyA.body || bodyA;
+            var b = bodyB.body || bodyB;
 
             var arbiter = this.getArbiter(a, b);
 
@@ -284,8 +282,8 @@
 
             }
 
-            var a = facePoly.parent || facePoly;
-            var b = vertPoly.parent || vertPoly;
+            var a = facePoly.body || facePoly;
+            var b = vertPoly.body || vertPoly;
 
             var arbiter = this.getArbiter(a, b);
             arbiter.set(a, b, faceNormal);
@@ -468,8 +466,8 @@
                 contactOnFace0 = Polygon.projectPointToEdge(contactOnVert0, faceV0, faceV1);
             }
 
-            var a = facePoly.parent || facePoly;
-            var b = vertPoly.parent || vertPoly;
+            var a = facePoly.body || facePoly;
+            var b = vertPoly.body || vertPoly;
 
             var arbiter = this.getArbiter(a, b);
             arbiter.set(a, b, faceNormal);

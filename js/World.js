@@ -89,7 +89,7 @@
                 len = bodies.length;
             while (i < len) {
                 var body = bodies[i];
-                if (body.parent){
+                if (body.body){
                     i++;
                     continue;
                 }
@@ -120,7 +120,7 @@
             i = 0;
             while (i < len) {
                 var body = bodies[i];
-                if (body.parent){
+                if (body.body){
                     i++;
                     continue;
                 }

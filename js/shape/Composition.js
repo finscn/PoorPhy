@@ -33,7 +33,7 @@
                 var cx = s.x;
                 var cy = s.y;
                 s.translateCentroid(x - cx, y - cy);
-                s.parent = Me;
+                s.body = Me;
             });
 
 
@@ -207,7 +207,7 @@
         addShape: function(shape) {
             this.shapes = this.shapes || [];
             this.shapes.push(shape);
-            shape.parent = this;
+            shape.body = this;
         }
     }
 
