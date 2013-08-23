@@ -131,6 +131,7 @@ function createPolyBody(n, r, x, y, angle, type,addToWorld) {
     var vertices;
     if (Array.isArray(n)) {
         vertices = n;
+        addToWorld=type;
         type = angle;
         angle = y;
         y = x;
