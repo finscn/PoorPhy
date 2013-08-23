@@ -1,10 +1,10 @@
 var METER_TO_PX = 1;
 var RENDER_SCALE = 30;
 var DEFAULT_COLOR = "#ff0033";
-var scale=1;
+var scale = 1;
 
 function randomInt(min, max) {
-    return min+(max - min + 1) * Math.random()>>0;
+    return min + (max - min + 1) * Math.random() >> 0;
 }
 
 function rotatePoints(points, ang) {
@@ -94,10 +94,10 @@ function createRect(w, h) {
     return vertices;
 }
 
-function createSegment(len){
+function createSegment(len) {
     len = len || 1;
     var vertices = [
-        [-len / 2,0],
+        [-len / 2, 0],
         [len / 2, 0]
     ];
 
@@ -105,54 +105,54 @@ function createSegment(len){
 }
 
 
-function createPolyBody(n,r,x,y,angle,type){
-// function createPolyBody(vertices,x,y,angle,type){
+function createPolyBody(n, r, x, y, angle, type) {
+    // function createPolyBody(vertices,x,y,angle,type){
     var vertices;
-    if (Array.isArray(n)){
-        vertices=n;
-        type=angle;
-        angle=y;
-        y=x;
-        x=r;
-    }else{
-        vertices= createPoly(n,r);
+    if (Array.isArray(n)) {
+        vertices = n;
+        type = angle;
+        angle = y;
+        y = x;
+        x = r;
+    } else {
+        vertices = createPoly(n, r);
     }
-    vertices = rotatePoints(vertices, angle||0);
-    vertices = translatePoints(vertices, x*scale, y*scale);
+    vertices = rotatePoints(vertices, angle || 0);
+    vertices = translatePoints(vertices, x * scale, y * scale);
 
     var body = new Polygon({
         vertices: vertices,
-        friction : friction,
-        restitution : restitution
+        friction: friction,
+        restitution: restitution
     })
-        // BodyType.Static;
-    if (type!==undefined){
-        body.bodyType=type;
+    // BodyType.Static;
+    if (type !== undefined) {
+        body.bodyType = type;
     }
-    if (body.bodyType===BodyType.Static){
-        body.mass=Infinity;
+    if (body.bodyType === BodyType.Static) {
+        body.mass = Infinity;
     }
     body.init();
     world.addBody(body);
     return body;
 }
 
-function createRectBody(w,h,x,y,angle,type){
-    var vertices = createRect(w*scale, h*scale);
-        vertices = rotatePoints(vertices, angle||0);
-    vertices = translatePoints(vertices, x*scale, y*scale);
+function createRectBody(w, h, x, y, angle, type) {
+    var vertices = createRect(w * scale, h * scale);
+    vertices = rotatePoints(vertices, angle || 0);
+    vertices = translatePoints(vertices, x * scale, y * scale);
 
     var body = new Polygon({
         vertices: vertices,
-        friction : friction,
-        restitution : restitution
+        friction: friction,
+        restitution: restitution
     })
-        // BodyType.Static;
-    if (type!==undefined){
-        body.bodyType=type;
+    // BodyType.Static;
+    if (type !== undefined) {
+        body.bodyType = type;
     }
-    if (body.bodyType===BodyType.Static){
-        body.mass=Infinity;
+    if (body.bodyType === BodyType.Static) {
+        body.mass = Infinity;
     }
     body.init();
     world.addBody(body);
@@ -161,22 +161,22 @@ function createRectBody(w,h,x,y,angle,type){
 }
 
 
-function createSegmentBody(len,x,y,angle,type){
+function createSegmentBody(len, x, y, angle, type) {
 
-    var vertices = createSegment(len*scale);
-        vertices = rotatePoints(vertices, angle||0);
-    vertices = translatePoints(vertices, x*scale, y*scale);
+    var vertices = createSegment(len * scale);
+    vertices = rotatePoints(vertices, angle || 0);
+    vertices = translatePoints(vertices, x * scale, y * scale);
 
     var body = new Segment({
         vertices: vertices,
-        friction : friction,
-        restitution : restitution
+        friction: friction,
+        restitution: restitution
     })
-    if (type!==undefined){
-        body.bodyType=type;
+    if (type !== undefined) {
+        body.bodyType = type;
     }
-    if (body.bodyType===BodyType.Static){
-        body.mass=Infinity;
+    if (body.bodyType === BodyType.Static) {
+        body.mass = Infinity;
     }
     body.init();
     world.addBody(body);
@@ -184,42 +184,72 @@ function createSegmentBody(len,x,y,angle,type){
 
 }
 
-function createCircleBody(r,x,y,angle,type,mass){
+function createCircleBody(r, x, y, angle, type, mass) {
     var body = new Circle({
-        radius : r*scale,
-        x : x*scale,
-        y : y*scale,
-        angle : angle||0,
-        friction : friction,
-        mass : mass||mass===0?mass:null,
-        restitution : restitution
+        radius: r * scale,
+        x: x * scale,
+        y: y * scale,
+        angle: angle || 0,
+        friction: friction,
+        mass: mass || mass === 0 ? mass : null,
+        restitution: restitution
     })
 
-    if (type!==undefined && type!==null){
-        body.bodyType=type;
+    if (type !== undefined && type !== null) {
+        body.bodyType = type;
     }
-    if (body.bodyType===BodyType.Static){
-        body.mass=Infinity;
+    if (body.bodyType === BodyType.Static) {
+        body.mass = Infinity;
     }
     body.init();
     world.addBody(body);
     return body;
 
 
+}
+
+function drawBody(context, body, color) {
+    if (body.shapes) {
+        drawComp(context, body, color)
+    } else {
+        if (body.centre) {
+            drawCircle(context, body, color)
+        } else {
+            drawPoly(context, body, color);
+        }
+    }
+}
+
+function drawBodies(context, bodies) {
+    var oa = context.globalAlpha;
+    for (var i = 0, len = bodies.length; i < len; i++) {
+        var body = bodies[i];
+        var color = body.sleeping ? "#dddddd" : "#ff3300";
+        var alpha = ("alpha" in body) ? (body.alpha || 0) : 1;
+        context.globalAlpha = alpha;
+        drawBody(context, body, color);
+    }
+    context.globalAlpha = oa || 1;
+
+}
+
+function drawComp(context, comp, color) {
+    comp.shapes.forEach(function(p) {
+        if (p.centre) {
+            drawCircle(context, p, color)
+        } else {
+            drawPoly(context, p, color);
+        }
+    });
 }
 
 function drawPoly(context, poly, color) {
-    if (poly.shapes){
-        poly.shapes.forEach(function(p){
-            drawPoly(context,p,color);
-        });
-        return;
-    }
+
     var drawNormal = false;
 
     context.strokeStyle = color || DEFAULT_COLOR;
     context.fillStyle = color || DEFAULT_COLOR;
-    if (!poly.vertices){
+    if (!poly.vertices) {
         return;
     }
     var a = poly.vertices[0];
@@ -255,23 +285,16 @@ function drawPoly(context, poly, color) {
 
 }
 
-function drawBody(context, body, color){
-    if (body.vertices){
-        drawPoly(context,body,color)
-    }else{
-        drawCircle(context,body,color)
 
-    }
-}
 
-function drawPoint(context, x,y, color) {
-    if (Array.isArray(x)){
-        color=y;
-        y=x[1]
-        x=x[0]
+function drawPoint(context, x, y, color) {
+    if (Array.isArray(x)) {
+        color = y;
+        y = x[1]
+        x = x[0]
     }
     context.strokeStyle = color || DEFAULT_COLOR;
-    context.strokeRect(x*RENDER_SCALE-2,y*RENDER_SCALE-2,4,4);
+    context.strokeRect(x * RENDER_SCALE - 2, y * RENDER_SCALE - 2, 4, 4);
 }
 
 function drawCircle(context, circle, color) {
@@ -291,17 +314,17 @@ function drawCircle(context, circle, color) {
     // context.fill();
     context.closePath();
     // console.log(circle.cos,circle.sin)
-    drawLine(context,x,y,x + circle.radius * circle.cos, y + circle.radius * circle.sin,color);
+    drawLine(context, x, y, x + circle.radius * circle.cos, y + circle.radius * circle.sin, color);
     context.fillRect(c[0] * RENDER_SCALE - 3, c[1] * RENDER_SCALE - 3, 6, 6)
     context.strokeRect(x * RENDER_SCALE - 1, y * RENDER_SCALE - 1, 2, 2)
 
 }
 
-function drawLine(context, x1,y1, x2,y2,color){
+function drawLine(context, x1, y1, x2, y2, color) {
     context.strokeStyle = color || DEFAULT_COLOR;
     context.beginPath();
-    context.moveTo(x1* RENDER_SCALE, y1* RENDER_SCALE);
-    context.lineTo(x2* RENDER_SCALE, y2* RENDER_SCALE);
+    context.moveTo(x1 * RENDER_SCALE, y1 * RENDER_SCALE);
+    context.lineTo(x2 * RENDER_SCALE, y2 * RENDER_SCALE);
     context.stroke();
     context.closePath();
 }
@@ -317,8 +340,26 @@ function drawLine(context, x1,y1, x2,y2,color){
 // }
 
 
-function drawArbiter(context,arbiter){
+function drawArbiter(context, collideManager) {
+    var colors = ["#66ff66", "#ff66ff", "#6666ff"];
+    var colors = ["#33ff66"];
 
+    var arbiters = collideManager.arbiters;
+    var arbiterCount = collideManager.arbiterCount;
+
+    for (var i = 0; i < arbiterCount; i++) {
+        var arbiter = arbiters[i];
+        var contacts = arbiter.contacts;
+        context.strokeStyle = colors[i % 3];
+        for (var k = 0; k < contacts.length; k++) {
+            var contact = contacts[k];
+            var p1 = contact.contactOnA,
+                p2 = contact.contactOnB;
+            context.strokeRect(p1[0] * RENDER_SCALE - 2, p1[1] * RENDER_SCALE - 2, 4, 4);
+            context.strokeRect(p2[0] * RENDER_SCALE - 2, p2[1] * RENDER_SCALE - 2, 4, 4);
+        }
+
+    }
 }
 
 function getElementPosition(element) {

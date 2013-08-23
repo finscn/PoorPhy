@@ -80,41 +80,13 @@ function init() {
         world.step(timeStep);
 
         var bodies = world.bodies;
+        drawBodies(context,bodies);
 
-        // drawPoint(context, 10, 7)
-        for (var i = 0, body; body = bodies[i++];) {
-            var color = body.sleeping ? "#dddddd" : "#ff3300";
-            if (body.shapeType == ShapeType.Poly) {
-                drawPoly(context, body, color);
-            } else if (body.shapeType == ShapeType.Circle) {
-                drawCircle(context, body, color);
-            }
-        }
-
-        // renderContacts();
+        // drawArbiter(context,world.collideManager);
+        
     };
 
-    function renderContacts() {
-        var colors = ["#66ff66", "#ff66ff", "#6666ff"];
-        var colors = ["#33ff66"];
-        var coll = world.collideManager;
 
-        var arbiters = coll.arbiters;
-
-        var arbiterCount = coll.arbiterCount;
-        for (var i = 0; i < arbiterCount; i++) {
-            var arbiter = arbiters[i];
-            var contacts = arbiter.contacts;
-            context.strokeStyle = colors[i % 3];
-            for (var k = 0; k < contacts.length; k++) {
-                var contact = contacts[k];
-                var p1 = contact.contactOnA,
-                    p2 = contact.contactOnB;
-                context.strokeRect(p1[0] * RENDER_SCALE - 2, p1[1] * RENDER_SCALE - 2, 4, 4);
-                context.strokeRect(p2[0] * RENDER_SCALE - 2, p2[1] * RENDER_SCALE - 2, 4, 4);
-            }
-        }
-    }
     window.setInterval(update, 1000 / FPS);
 
 };
