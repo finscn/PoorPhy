@@ -26,8 +26,8 @@
             this.density = this.density || 1;
             this.area = 0;
 
-            this.originalInertia = 0;
             this.setMass(this.mass);
+            this.originalInertia = (this.originalInertia||0) * this.density;
             this.setInertia(this.inertia!==null?this.inertia:this.originalInertia);
         },
     }

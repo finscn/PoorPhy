@@ -53,8 +53,8 @@
             this.density = this.density || 1;
             this.area = Math.PI * this.radiusSq;
 
-            this.originalInertia=this.mass * this.radiusSq /2 ;
             this.setMass(this.mass);
+            this.originalInertia=this.mass * this.radiusSq /2 ;
             this.setInertia(this.inertia!==null?this.inertia:this.originalInertia);
 
         },
