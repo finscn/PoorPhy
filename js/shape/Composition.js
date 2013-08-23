@@ -208,7 +208,15 @@
             this.shapes = this.shapes || [];
             this.shapes.push(shape);
             shape.body = this;
-        }
+        },
+        containPoint : function(x, y) {
+            for (var i=0,len=this.shapes.length;i<len;i++){
+                if (this.shapes[i].containPoint(x,y)){
+                    return true;
+                }
+            }
+            return false;
+        },
     }
 
     exports.Composition = Class(Composition, proto);
