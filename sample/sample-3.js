@@ -48,7 +48,7 @@ function initBodies() {
         ]
     })
     cmp.init();
-    cmp.setAngle(-0.5);
+    cmp.setAngle(-0.2);
     world.addBody(cmp);
 }
 
