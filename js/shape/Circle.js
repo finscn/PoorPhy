@@ -63,14 +63,17 @@
             this.x+=x;
             this.y+=y;
             var localCentre=this.localCentre;
-            var len = localCentre.length;
-            for (var i=0;i<len;i++){
-                var local=localCentre[i];
-                local[0]-=x;
-                local[1]-=y;
-            }
+            localCentre[0]-=x;
+            localCentre[1]-=y;
         },
         
+
+
+        updateVertices: function() {
+            this.updateCentre();
+            this.updateAABB();
+        },
+
         updateCentre: function() {
             var ox = this.localCentre[0],
                 oy = this.localCentre[1];

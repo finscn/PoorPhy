@@ -20,6 +20,9 @@
 
         _updatedCount: 0,
 
+        updateNormals: function() {
+
+        },
         setAngle: function(angle) {
             this.angle = angle;
 
