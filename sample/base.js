@@ -270,6 +270,7 @@ function drawComp(context, comp, color) {
             drawPoly(context, p, color);
         }
     });
+    drawPoint(context,comp.x,comp.y,color)
 }
 
 function drawPoly(context, poly, color) {
@@ -343,7 +344,8 @@ function drawCircle(context, circle, color) {
     // context.fill();
     context.closePath();
     // console.log(circle.cos,circle.sin)
-    drawLine(context, x, y, x + circle.radius * circle.cos, y + circle.radius * circle.sin, color);
+    // drawLine(context, x, y, x + circle.radius * circle.cos, y + circle.radius * circle.sin, color);
+    drawLine(context, c[0], c[1], c[0] + circle.radius * circle.cos, c[1] + circle.radius * circle.sin, color);
     context.fillRect(c[0] * RENDER_SCALE - 3, c[1] * RENDER_SCALE - 3, 6, 6)
     context.strokeRect(x * RENDER_SCALE - 1, y * RENDER_SCALE - 1, 2, 2)
 

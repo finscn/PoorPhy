@@ -29,15 +29,26 @@ function initGround() {
 
 function initBodies() {
 
-    var b1 = createRectBody(2, 5, 9.5, 4, 0, null, false);
-    var b2 = createRectBody(3, 1, 12, 2, 0,null, false);
+    var b1 = createRectBody(2, 5, 9.5, 6, 0, null, false);
+    var b2 = createRectBody(3, 1, 12, 4, 0,null, false);
     var cmp = new Composition({
         shapes: [
             b1, b2
         ]
     })
     cmp.init();
-    cmp.setAngle(0.5)
+    cmp.setAngle(0.5);
+    world.addBody(cmp);
+
+    var b1 = createRectBody(1.5, 1.5, 7.5, 2, 0,null, false);
+    var b2 = createCircleBody( 1, 7.5, 3, 4, null, null, false);
+    var cmp = new Composition({
+        shapes: [
+            b1, b2
+        ]
+    })
+    cmp.init();
+    cmp.setAngle(-0.5);
     world.addBody(cmp);
 }
 
@@ -61,10 +72,6 @@ function init() {
     function update() {
 
         context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // cmp.update(1 / 60)
-        // drawPoly(context, cmp, "red");
-        // drawPoint(context, cmp.x, cmp.y);
 
 
         world.step(timeStep);
