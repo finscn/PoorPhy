@@ -1,6 +1,6 @@
 var METER_TO_PX = 1;
 var RENDER_SCALE = 30;
-var DEFAULT_COLOR = "#ff0033";
+var DEFAULT_COLOR = "#ff6600";
 var scale = 1;
 
 function randomInt(min, max) {
@@ -250,11 +250,12 @@ function drawBody(context, body, color) {
     }
 }
 
-function drawBodies(context, bodies) {
+function drawBodies(context, bodies , color ) {
+    color=color || DEFAULT_COLOR;
     var oa = context.globalAlpha;
     for (var i = 0, len = bodies.length; i < len; i++) {
         var body = bodies[i];
-        var color = body.sleeping ? "#dddddd" : "#ff3300";
+        var color = body.sleeping ? "#dddddd" : color;
         var alpha = ("alpha" in body) ? (body.alpha || 0) : 1;
         context.globalAlpha = alpha;
         drawBody(context, body, color);
