@@ -1,4 +1,5 @@
 "use strict";
+
 (function(exports, undefined) {
 
 
@@ -263,6 +264,9 @@
         },
 
         containPoint: function(x, y) {
+            if (!this.inAABB(x,y)){
+                return false;
+            }
             var vertices = this.vertices;
             var normals = this.normals;
             var len = vertices.length;
@@ -277,7 +281,6 @@
                 var q = vertices[i],
                     qx = q[0],
                     qy = q[1];
-
 
                 var minX, maxX;
                 if (px < qx) {
@@ -294,7 +297,6 @@
                         return false;
                     }
                     if (found == 1) {
-                        console.log("containPoint true")
                         return true;
                     }
                     found++; // one edge found.

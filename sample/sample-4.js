@@ -39,14 +39,14 @@ function initBodies() {
     // cmp.init();
     // cmp.setAngle(0.5);
     // world.addBody(cmp);
-    var v=createPoly(3,1);
-    var b0 = createPolyBody(v, 11, 0.3, Math.PI/6,null);
-    var b1 = createRectBody(1.5, 4, 11, 3, 0,null, false);
-    var b2 = createCircleBody( 1, 9.5, 5.5, 4, null, null, false);
-    var b3 = createCircleBody( 1, 12.5, 5.5, 4, null, null, false);
+    var b0 = createCircleBody( 1, 9.5, 5.5, 4, null, null, false);
+    var b1 = createCircleBody( 1, 12.5, 5.5, 4, null, null, false);
+    var b2 = createRectBody(1.5, 4, 11, 3, 0,null, false);
+    var v=createPoly(4,1.2);
+    var b3 = createPolyBody(v, 11, 0.6, 0 , null,false);
     var cmp = new Composition({
         shapes: [
-            b1, b2, b3
+            b3, b1 , b2, b0
         ]
     })
     cmp.init();

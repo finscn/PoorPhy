@@ -1,4 +1,5 @@
 "use strict";
+
 (function(exports, undefined) {
 
     // TO BE DONE
@@ -50,7 +51,7 @@
 
             var mass = 0,
                 inertia = 0,
-                area =0;
+                area = 0;
 
             var shapes = this.shapes;
             var len = shapes.length;
@@ -69,50 +70,18 @@
             ac[1] /= len;
 
 
-            var c;
-            if (len < 3) {
-                c = [(shapes[0].x + shapes[1].x) / 2, (shapes[0].y + shapes[1].y) / 2];
-                // return c;
-            } else {
-                c = [0, 0];
-
-                var area2 = 0;
-
-                var originalInertia = 0;
-
-                var s0 = shapes[len - 1];
-                var x1 = s0.x - ac[0],
-                    y1 = s0.y - ac[1];
-
-                for (var i = 0; i < len; ++i) {
-
-                    var s1 = shapes[i];
-                    var x2 = s1.x - ac[0],
-                        y2 = s1.y - ac[1];
-
-
-                    var triangleArea2 = (x1 * y2 - y1 * x2);
-                    area2 += triangleArea2;
-
-                    c[0] += triangleArea2 * (x1 + x2);
-                    c[1] += triangleArea2 * (y1 + y2);
-
-                    var inertiaX = (x1 * x1 + x1 * x2 + x2 * x2);
-                    var inertiaY = (y1 * y1 + y1 * y2 + y2 * y2);
-
-                    originalInertia += triangleArea2 * (inertiaX + inertiaY);
-
-                    x1 = x2;
-                    y1 = y2;
-                }
-
-
-                c[0] = c[0] / (area2 * 3) + ac[0];
-                c[1] = c[1] / (area2 * 3) + ac[1];
+            var vertices = [];
+            for (var i = 0; i < len; ++i) {
+                var s = shapes[i];
+                vertices.push([s.x - ac[0], s.y - ac[1]]);
 
             }
 
-            this.area=area;
+            var c = this.computeCentroid(vertices);
+            c[0] += ac[0];
+            c[1] += ac[1];
+
+            this.area = area;
             this.originalCentroid = c;
 
             this.setMass(mass);
@@ -121,6 +90,47 @@
             return c;
 
         },
+
+        computeCentroid: function(vertices) {
+            var len = vertices.length;
+            var c;
+            if (len == 1) {
+                return [vertices[0][0], vertices[0][1]];
+            }
+            if (len == 2) {
+                c = [(vertices[0][0] + vertices[1][0]) / 2, (vertices[0][1] + vertices[1][1]) / 2];
+                return c;
+            }
+            c = [0, 0];
+
+            var area2 = 0;
+
+            var s0 = vertices[len - 1];
+            var x1 = s0[0],
+                y1 = s0[1];
+
+            for (var i = 0; i < len; ++i) {
+
+                var s1 = vertices[i];
+                var x2 = s1[0],
+                    y2 = s1[1];
+
+                var triangleArea2 = (x1 * y2 - y1 * x2);
+                area2 += triangleArea2;
+
+                c[0] += triangleArea2 * (x1 + x2);
+                c[1] += triangleArea2 * (y1 + y2);
+
+                x1 = x2;
+                y1 = y2;
+            }
+
+            c[0] = c[0] / (area2 * 3);
+            c[1] = c[1] / (area2 * 3);
+
+            return c;
+        },
+
 
         translateCentroid: function(x, y) {
             this.x += x;
@@ -209,9 +219,9 @@
             this.shapes.push(shape);
             shape.body = this;
         },
-        containPoint : function(x, y) {
-            for (var i=0,len=this.shapes.length;i<len;i++){
-                if (this.shapes[i].containPoint(x,y)){
+        containPoint: function(x, y) {
+            for (var i = 0, len = this.shapes.length; i < len; i++) {
+                if (this.shapes[i].containPoint(x, y)) {
                     return true;
                 }
             }

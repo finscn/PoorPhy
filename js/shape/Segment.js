@@ -1,4 +1,5 @@
 "use strict";
+
 (function(exports, undefined) {
 
 
@@ -30,6 +31,9 @@
             this.originalInertia = (this.originalInertia||0) * this.density;
             this.setInertia(this.inertia!==null?this.inertia:this.originalInertia);
         },
+        containPoint: function(x, y) {
+            return false;
+        }
     }
 
 

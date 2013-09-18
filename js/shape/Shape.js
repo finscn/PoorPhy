@@ -1,4 +1,5 @@
 "use strict";
+
 (function(exports, undefined) {
 
 
@@ -29,6 +30,10 @@
             this.cos = Math.cos(angle);
             this.sin = Math.sin(angle);
         },
+        inAABB : function(x,y){
+            return this.aabb[0]<x && x<this.aabb[2]
+                && this.aabb[1]<y && y<this.aabb[3]
+        }
 
     };
 

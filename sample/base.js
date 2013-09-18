@@ -255,10 +255,10 @@ function drawBodies(context, bodies , color ) {
     var oa = context.globalAlpha;
     for (var i = 0, len = bodies.length; i < len; i++) {
         var body = bodies[i];
-        var color = body.sleeping ? "#dddddd" : color;
+        var _color = body.sleeping ? "#e3e3e3" : color;
         var alpha = ("alpha" in body) ? (body.alpha || 0) : 1;
         context.globalAlpha = alpha;
-        drawBody(context, body, color);
+        drawBody(context, body, _color);
     }
     context.globalAlpha = oa || 1;
 
@@ -361,16 +361,6 @@ function drawLine(context, x1, y1, x2, y2, color) {
     context.stroke();
     context.closePath();
 }
-
-// function drawLine(context, v0, v1, color) {
-//     context.strokeStyle = color || DEFAULT_COLOR;
-//     context.fillStyle = color || DEFAULT_COLOR;
-//     context.beginPath();
-//     context.moveTo(v0[0] * RENDER_SCALE, v0[1] * RENDER_SCALE);
-//     context.lineTo(v1[0] * RENDER_SCALE, v1[1] * RENDER_SCALE);
-//     context.stroke()
-//     context.closePath();
-// }
 
 
 function drawArbiter(context, collideManager) {

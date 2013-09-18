@@ -1,4 +1,5 @@
 "use strict";
+
 (function(exports, undefined) {
 
     var CollideType = {
@@ -161,6 +162,17 @@
             var cc = this.collide(timeStep);
             // console.log("collide-test count : ",cc);
 
+        },
+
+        preSolve: function(timeStep) {
+            var arbiters = this.arbiters;
+            var arbiterCount = this.arbiterCount;
+            for (var i = 0; i < arbiterCount; i++) {
+                var arbiter = arbiters[i];
+                if (!arbiter.disabled) {
+                    arbiter.preSolve(timeStep);
+                }
+            }
         },
 
         solve: function(timeStep, iterations, iter) {

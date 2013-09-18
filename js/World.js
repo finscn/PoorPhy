@@ -1,4 +1,5 @@
 "use strict";
+
 (function(exports, undefined) {
 
 
@@ -21,7 +22,7 @@
         allowSleep: true,
 
         timeToSleep: 0.5,
-        minSleepVelSq: 0.01,//*0.01,
+        minSleepVelSq: 0.01, //*0.01,
         minSleepVelAng: 0.2,
 
         solveIterations: 10,
@@ -29,9 +30,15 @@
         BODY_SN_SEED: 1,
 
 
-        init: function() {
+        init: function(parent) {
+            this.parent=parent;
+
             this.bodies = [];
 
+            this.initCollideManager();
+        },
+
+        initCollideManager : function(){
             var cm = this.collideManager = this.collideManager || new CollideManager();
 
             cm.onCollided = this.onCollided || cm.onCollided;
@@ -42,8 +49,8 @@
         },
 
         addBody: function(body) {
-            body._sn=this.BODY_SN_SEED++;
-            body.id = body.id||body._sn;
+            body._sn = this.BODY_SN_SEED++;
+            body.id = body.id || body._sn;
 
             if (body.bodyType !== BodyType.Static && !body.ignoreG) {
                 body.gravityX = this.gravityX;
@@ -72,24 +79,32 @@
             return false;
         },
 
+        preSolve: function(timeStep) {
+            
+            // var iterations = this.solveIterations;
+            var collideManager = this.collideManager;
+            // for (var i = 0; i < iterations; i++) {
+                collideManager.preSolve(timeStep)
+            // }
+        },
+
         solve: function(timeStep) {
             var iterations = this.solveIterations;
-            var collideManager=this.collideManager;
+            var collideManager = this.collideManager;
             for (var i = 0; i < iterations; i++) {
-                collideManager.solve(timeStep,iterations,i) 
+                collideManager.solve(timeStep, iterations, i)
             }
-
         },
 
 
         step: function(timeStep) {
-            
+
             var bodies = this.bodies;
             var i = 0,
                 len = bodies.length;
             while (i < len) {
                 var body = bodies[i];
-                if (body.body){
+                if (body.body) {
                     i++;
                     continue;
                 }
@@ -114,13 +129,14 @@
 
             this.collideManager.update(timeStep);
             // this.jointManager.update(timeStep);
+            // this.preSolve(timeStep);
             this.solve(timeStep);
 
 
             i = 0;
             while (i < len) {
                 var body = bodies[i];
-                if (body.body){
+                if (body.body) {
                     i++;
                     continue;
                 }
@@ -135,7 +151,7 @@
                 }
 
                 body.setForce(0, 0);
-                body.forceTorque=0;
+                body.forceTorque = 0;
                 i++;
             }
 
@@ -143,7 +159,7 @@
 
     }
 
-    exports.World = Class(World,proto);
+    exports.World = Class(World, proto);
 
 
 }(exports));
