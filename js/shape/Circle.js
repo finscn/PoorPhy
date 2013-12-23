@@ -34,6 +34,8 @@
             if (this.y===null){
                 this.y=this.centre[1];
             }
+            this.originalX=this.x;
+            this.originalY=this.y;
 
             this.setAngle(this.angle||0);
 
@@ -125,7 +127,7 @@
 
 
 
-    exports.Circle = Class(Circle,proto);
+    exports.Circle = Class.create(Circle,proto);
 
 }(exports));
 

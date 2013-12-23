@@ -37,9 +37,10 @@
                 s.body = Me;
             });
 
-
             this.x = x;
             this.y = y;
+            this.originalX=this.x;
+            this.originalY=this.y;
 
             this.last = {};
             this.aabb = [0, 0, 0, 0];
@@ -229,6 +230,6 @@
         },
     }
 
-    exports.Composition = Class(Composition, proto);
+    exports.Composition = Class.create(Composition, proto);
 
 }(exports));

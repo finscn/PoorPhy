@@ -4,11 +4,10 @@
 
 
     var Body = function(cfg) {
-
         for (var key in cfg) {
             this[key] = cfg[key];
         }
-    }
+    };
 
     var proto = {
 
@@ -51,19 +50,20 @@
 
         noop: function() {},
 
-        init : function(){
+        init: function() {
 
-            this.last={};
-            this.aabb = [0,0,0,0];
+            this.last = {};
+            this.aabb = [0, 0, 0, 0];
         },
 
-        saveStatus : function(){
+        saveStatus: function() {
             this.last.velX = this.velX;
             this.last.velY = this.velY;
             this.last.velY = this.velY;
             this.last.x = this.x;
             this.last.y = this.y;
         },
+
         setMass: function(mass) {
             var invMass;
             if (!mass && mass !== 0) {
@@ -114,10 +114,10 @@
             this.forceY = y;
         },
 
-        getVelSq : function(){
-            return this.velX*this.velX+this.velY*this.velY;
+        getVelSq: function() {
+            return this.velX * this.velX + this.velY * this.velY;
         },
-        
+
         applyForce: function(x, y, point) {
             if (this.bodyType != BodyType.Dynamic) {
                 return;
@@ -126,8 +126,8 @@
             this.forceX += x;
             this.forceY += y;
 
-            if (point){
-                this.forceTorque += ((point[0] - this.x) * y - (point[1] - this.y) * x) ;
+            if (point) {
+                this.forceTorque += ((point[0] - this.x) * y - (point[1] - this.y) * x);
             }
 
         },
@@ -135,8 +135,8 @@
 
         applyDamping: function(timeStep) {
             var d = 1 - timeStep * this.damping;
-            (d < 0) || (d = 0);
-            (d > 1) || (d = 1);
+            (d < 0) && (d = 0);
+            (d > 1) && (d = 1);
             this.velX *= d;
             this.velY *= d;
         },
@@ -164,7 +164,7 @@
             this.awake();
             this.velX += this.invMass * x;
             this.velY += this.invMass * y;
-            if (point){
+            if (point) {
                 this.velAng += ((point[0] - this.x) * y - (point[1] - this.y) * x) * this.invInertia;
             }
         },
@@ -196,7 +196,7 @@
 
             this.integrateAngle(timeStep);
             this.integratePos(timeStep);
-            
+
             // this.setAngle(this.angle + this.velAng * timeStep);
             // this.x += this.velX * timeStep;
             // this.y += this.velY * timeStep;
@@ -206,23 +206,23 @@
 
         integrateVelAngle: function(timeStep) {
             this.velAng += (this.forceTorque * this.invMass) * timeStep;
-            if (this.dampingAng!==0){
-                this.velAng *= Math.min(1, Math.max(0, 1-this.dampingAng * timeStep));
+            if (this.dampingAng !== 0) {
+                this.velAng *= Math.min(1, Math.max(0, 1 - this.dampingAng * timeStep));
             }
         },
-        
+
         integrateVel: function(timeStep) {
             this.velX += (this.gravityX + this.forceX * this.invMass) * timeStep;
             this.velY += (this.gravityY + this.forceY * this.invMass) * timeStep;
-            if (this.damping!==0){
-                var d=Math.min(1, Math.max(0, 1-this.damping * timeStep));
-                this.velX *=d ;
-                this.velY *=d ;
+            if (this.damping !== 0) {
+                var d = Math.min(1, Math.max(0, 1 - this.damping * timeStep));
+                this.velX *= d;
+                this.velY *= d;
             }
         },
-        
+
         integrateAngle: function(timeStep) {
-            this.lastAngle=this.angle;
+            this.lastAngle = this.angle;
             this.setAngle(this.angle + this.velAng * timeStep);
         },
 
@@ -230,12 +230,12 @@
         integratePos: function(timeStep) {
             this.lastX = this.x;
             this.lastY = this.y;
-            this.setPos(this.x+this.velX * timeStep, this.y+this.velY * timeStep);
+            this.setPos(this.x + this.velX * timeStep, this.y + this.velY * timeStep);
         },
 
     }
 
-    exports.Body = Class(Body,proto);
+    exports.Body = Class.create(Body, proto);
 
 
 }(exports));

@@ -159,7 +159,7 @@
 
     }
 
-    exports.World = Class(World, proto);
+    exports.World = Class.create(World, proto);
 
 
 }(exports));

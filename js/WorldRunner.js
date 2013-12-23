@@ -105,7 +105,7 @@
         }
     }
 
-    exports.WorldRunner = Class(WorldRunner,proto);
+    exports.WorldRunner = Class.create(WorldRunner,proto);
 
 }(exports));
 

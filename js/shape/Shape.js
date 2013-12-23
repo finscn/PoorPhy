@@ -14,7 +14,7 @@
 
     var proto = {
 
-        shapeType : null,
+        shapeType: null,
 
         aabbExtension: 5,
         aabb: null, // []
@@ -30,15 +30,14 @@
             this.cos = Math.cos(angle);
             this.sin = Math.sin(angle);
         },
-        inAABB : function(x,y){
-            return this.aabb[0]<x && x<this.aabb[2]
-                && this.aabb[1]<y && y<this.aabb[3]
+        inAABB: function(x, y) {
+            return this.aabb[0] < x && x < this.aabb[2] && this.aabb[1] < y && y < this.aabb[3]
         }
 
     };
 
 
-    exports.Shape = Class(Shape,proto);
+    exports.Shape = Class.create(Shape, proto);
 
 
 }(exports));

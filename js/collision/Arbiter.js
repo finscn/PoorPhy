@@ -25,7 +25,7 @@
         restitutionVelocity: 1,
         splittingFrame: 3,
 
-        collisionSlop: 0.01 ,
+        collisionSlop: 0.01,
         // collisionSlop: 0,
 
         set: function(bodyA, bodyB, normalA) {
@@ -43,7 +43,7 @@
 
             this.lastDataA = this.lastDataB = {};
 
-            this.disabled=false;
+            this.disabled = false;
         },
 
 
@@ -119,12 +119,12 @@
             for (var i = 0; i < this.contacts.length; i++) {
                 var con = this.contacts[i];
 
-                var armA=con.armA;
-                var armB=con.armB;
+                var armA = con.armA;
+                var armB = con.armB;
                 // var nx = con.normal[0];
                 // var ny = con.normal[1];
-                var nx=normal[0],
-                    ny=normal[1];
+                var nx = normal[0],
+                    ny = normal[1];
                 var impX = nx * con.normalImpulse - ny * con.tangentImpulse,
                     impY = nx * con.tangentImpulse + ny * con.normalImpulse;
 
@@ -139,7 +139,7 @@
         },
 
         solve: function(timeStep, iterations) {
-            
+
             var bodyA = this.bodyA,
                 bodyB = this.bodyB,
                 normal = this.normal,
@@ -190,14 +190,17 @@
                 ]
                 var normalRelativeVel = relativeVel[0] * normal[0] + relativeVel[1] * normal[1];
 
-                if (rvN === null) {
-                    rvN = normalRelativeVel;
-                }
+                // TODO velocityBias
+                // if (contactCount==1){
+                    if (contact.velocityBias === null) {
+                        contact.velocityBias = -restitution * normalRelativeVel/iterations/contactCount;
+                    }else{
 
+                    }
+                // }else{
+                //     contact.velocityBias=0;
+                // }
 
-                if (contact.velocityBias === null) {
-                    contact.velocityBias = restitution * rvN;
-                }
 
                 if (depth > 0) {
 
@@ -206,15 +209,11 @@
                         // bodyA.awake();
                         // bodyB.awake();
                     }
-
-
                     // TODO :  improve stability
-
-
                     var dt = timeStep;
                     var dd = depth;
-                    normalRelativeVel += dd / dt;  // ( (dd/iterations) / (dt/iterations) )
-                    contact.depth -= dd/iterations;
+                    normalRelativeVel += dd / dt; // ( (dd/iterations) / (dt/iterations) )
+                    contact.depth -= dd / iterations;
 
                     // var dt = timeStep;
                     // var dd = depth / this.splittingFrame;
@@ -258,8 +257,9 @@
                 // bodyB.velY -= (impY * bodyB.invMass);
                 // bodyB.velAng -= (armB[0] * impY - armB[1] * impX) * bodyB.invInertia;
 
-                
+
                 // console.log(normal[0]==0,impT==0)
+
 
                 var impX = normal[0] * impN - normal[1] * impT,
                     impY = normal[0] * impT + normal[1] * impN;
@@ -278,6 +278,6 @@
     };
 
 
-    exports.Arbiter = Class(Arbiter, proto);
+    exports.Arbiter = Class.create(Arbiter, proto);
 
 }(exports));

@@ -38,7 +38,7 @@
 
 
 
-    exports.Segment = Class(Segment, proto);
+    exports.Segment = Class.create(Segment, proto);
 
 
 }(exports));

@@ -39,6 +39,8 @@
             if (this.y === null) {
                 this.y = this.originalCentroid[1];
             }
+            this.originalX = this.x;
+            this.originalY = this.y;
             this.setAngle(this.angle || 0);
 
             this.vertexCount = this.vertices.length;
@@ -96,7 +98,6 @@
             this.aabb[3] = maxY + this.aabbExtension;
         },
 
-
         initMassData: function() {
 
             var vertices = this.vertices;
@@ -147,9 +148,9 @@
             c[1] = c[1] / (area2 * 3) + ac[1];
             this.originalCentroid = c;
 
-            this.density = this.density || 1;
             this.area = area2 / 2;
 
+            this.density = this.density || 1;
             this.setMass(this.mass);
             this.originalInertia = originalInertia / 12 * this.density;
             this.setInertia(this.inertia !== null ? this.inertia : this.originalInertia);
@@ -174,8 +175,8 @@
                 minY = Number.MAX_VALUE;
             var maxX = -minX,
                 maxY = -minY;
-
-            for (var i = 0; i < this.vertexCount; i++) {
+            var len = this.vertexCount;
+            for (var i = 0; i < len; i++) {
                 var ov = this.localVertices[i];
                 var ox = ov[0],
                     oy = ov[1];
@@ -264,7 +265,7 @@
         },
 
         containPoint: function(x, y) {
-            if (!this.inAABB(x,y)){
+            if (!this.inAABB(x, y)) {
                 return false;
             }
             var vertices = this.vertices;
@@ -275,7 +276,7 @@
                 py = p[1];
             var found = 0;
 
-            var n=normals[len-1];
+            var n = normals[len - 1];
 
             for (var i = 0; i < len; i++) {
                 var q = vertices[i],
@@ -301,7 +302,7 @@
                     }
                     found++; // one edge found.
                 }
-                n=normals[i];
+                n = normals[i];
                 px = qx;
                 py = qy;
             }
@@ -342,7 +343,7 @@
         ny /= length;
 
         var np = nx * v0[0] + ny * v0[1];
-        return [nx, ny, np, np];
+        return [nx, ny, np];
     };
 
     Polygon.computeNormals = function(vertices, normals) {
@@ -362,7 +363,7 @@
 
 
 
-    exports.Polygon = Class(Polygon, proto);
+    exports.Polygon = Class.create(Polygon, proto);
 
 
 }(exports));

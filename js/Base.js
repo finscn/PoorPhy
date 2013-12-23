@@ -56,14 +56,16 @@
             })
             return vertices;
         },
-        rotateVertices: function(vertices, ang) {
+        rotateVertices: function(vertices, ang,cx,cy) {
             var cos = Math.cos(ang),
                 sin = Math.sin(ang);
+            cx=cx||0;
+            cy=cy||0;
             vertices.forEach(function(p) {
-                var x = p[0],
-                    y = p[1];
-                p[0] = x * cos - y * sin;
-                p[1] = x * sin + y * cos;
+                var x = p[0]-cx,
+                    y = p[1]-cy;
+                p[0] = x * cos - y * sin+cx;
+                p[1] = x * sin + y * cos+cy;
             })
             return vertices;
         },
@@ -89,7 +91,7 @@
             for (var name in shapes) {
                 var s = shapes[name];
                 var shape=null;
-                console.log(s.length)
+                // console.log(s.length)
                 if (s.length === 1) {
                     var _s=s[0];
                     if (_s.polygon) {
@@ -138,10 +140,77 @@
                     shapeList.push(shape);
                 }
             }
-            console.log(shapeList)
+            // console.log(shapeList)
             return shapeList;
         },
 
+        cloneObject : function(obj){
+            return JSON.parse(JSON.stringify(obj));
+        },
+        createAABB: function(vertices,aabb) {
+            aabb=aabb||[];
+
+            var minX = Number.MAX_VALUE,
+                minY = Number.MAX_VALUE;
+            var maxX = -minX,
+                maxY = -minY;
+
+            for (var i = 0,len=vertices.length; i < len; i++) {
+                var v = vertices[i];
+
+                if (v[0] < minX) {
+                    minX = v[0];
+                }
+
+                if (v[0] > maxX) {
+                    maxX = v[0];
+                }
+
+                if (v[1] < minY) {
+                    minY = v[1];
+                }
+                if (v[1] > maxY) {
+                    maxY = v[1];
+                }
+            }
+            aabb[0] = minX;
+            aabb[1] = minY;
+            aabb[2] = maxX;
+            aabb[3] = maxY;
+
+            return aabb;
+
+        },
+
+        checkInAABB : function(x,y,aabb){
+            return aabb[0]<x && x<aabb[2]
+                && aabb[1]<y && y<aabb[3];
+        },
+
+        checkAABBCollide : function( aabb1, aabb2){
+            return aabb1[0]<aabb2[2]
+                && aabb1[2]>aabb2[0]
+                && aabb1[1]<aabb2[3]
+                && aabb1[3]>aabb2[1];
+        },
+
+        mergeAABB : function(aabb1,aabb2){
+            return [
+                Math.min(aabb1[0],aabb2[0]),
+                Math.min(aabb1[1],aabb2[1]),
+                Math.max(aabb1[2],aabb2[2]),
+                Math.max(aabb1[3],aabb2[3])
+            ];
+        },
+
+        extendAABB : function(aabb, ext){
+            return [
+                aabb[0]-ext,
+                aabb[1]-ext,
+                aabb[2]+ext,
+                aabb[3]+ext
+            ];
+        }
 
     }
 

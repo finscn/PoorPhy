@@ -671,7 +671,7 @@
 
     }
 
-    exports.CollideManager = Class(CollideManager, proto);
+    exports.CollideManager = Class.create(CollideManager, proto);
 
 
 }(exports));
