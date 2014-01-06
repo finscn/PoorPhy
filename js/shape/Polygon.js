@@ -4,7 +4,6 @@
 
 
     var Polygon = function(cfg) {
-
         for (var key in cfg) {
             this[key] = cfg[key];
         }
@@ -269,11 +268,11 @@
                 return false;
             }
             var vertices = this.vertices;
-            var normals = this.normals;
             var len = vertices.length;
             var p = vertices[len - 1],
                 px = p[0],
                 py = p[1];
+            var normals = this.normals;
             var found = 0;
 
             var n = normals[len - 1];
@@ -309,6 +308,45 @@
 
             return false;
         },
+
+
+
+        pointRayCasting: function(x, y) {
+            var vertices = this.vertices;
+            var len = vertices.length;
+            var p = vertices[len - 1],
+                px = p[0],
+                py = p[1];
+
+            var flag = false;
+            for (var i = 0; i < len; i++) {
+                var q = vertices[i],
+                    qx = q[0],
+                    qy = q[1];
+                    
+                    // 点与多边形顶点重合
+                if ((qx === x && qy === y) || (px === x && py === y)) {
+                    return 'on'
+                }
+                // 线段两端点在射线两侧
+                if ((qy < y && py >= y) || (qy >= y && py < y)) {
+                    var _x = qx + (y - qy) * (px - qx) / (py - qy)
+                    // 点在多边形的边上
+                    if (_x === x) {
+                        return 'on'
+                    }
+                    // 射线穿过多边形的边界
+                    if (_x > x) {
+                        flag = !flag
+                    }
+                }
+                px = qx;
+                py = qy;
+            }
+            // 射线穿过多边形边界的次数为奇数时点在多边形内
+            return flag ? 'in' : 'out'
+        },
+
 
     };
 
