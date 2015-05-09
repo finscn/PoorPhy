@@ -6,7 +6,6 @@
 
         this.contacts = [];
 
-
     };
 
 
@@ -48,7 +47,6 @@
 
 
         addContact: function(contactOnA, contactOnB, depth) {
-
 
             var normal = this.normal;
             var tangent = this.tangent;

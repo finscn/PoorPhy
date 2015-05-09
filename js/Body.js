@@ -39,7 +39,7 @@
         inertia: null,
         invInertia: null,
 
-        fixedRotation: false, // true ===> inertia=0 
+        fixedRotation: false, // true ===> inertia=0
 
         ignoreG: false,
         gravityX: 0,
