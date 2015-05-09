@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 (function(exports, undefined) {
 
@@ -27,7 +27,6 @@
         vertexCount: 0,
 
         _updatedCount: 0,
-
 
         init: function() {
             this.initMassData();
@@ -310,7 +309,6 @@
         },
 
 
-
         pointRayCasting: function(x, y) {
             var vertices = this.vertices;
             var len = vertices.length;
@@ -323,8 +321,8 @@
                 var q = vertices[i],
                     qx = q[0],
                     qy = q[1];
-                    
-                    // 点与多边形顶点重合
+
+                // 点与多边形顶点重合
                 if ((qx === x && qy === y) || (px === x && py === y)) {
                     return 'on'
                 }
