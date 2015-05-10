@@ -242,7 +242,7 @@ function drawBody(context, body, color) {
     if (body.shapes) {
         drawComp(context, body, color)
     } else {
-        if (body.centre) {
+        if (body.center) {
             drawCircle(context, body, color)
         } else {
             drawPoly(context, body, color);
@@ -266,7 +266,7 @@ function drawBodies(context, bodies , color ) {
 
 function drawComp(context, comp, color) {
     comp.shapes.forEach(function(p) {
-        if (p.centre) {
+        if (p.center) {
             drawCircle(context, p, color)
         } else {
             drawPoly(context, p, color);
@@ -337,7 +337,7 @@ function drawCircle(context, circle, color) {
     var x = circle.x;
     var y = circle.y;
 
-    var c = circle.centre;
+    var c = circle.center;
 
     // in the context.arc path , if draw other things will trigger one chrome's bug.
     context.beginPath();

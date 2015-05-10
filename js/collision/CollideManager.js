@@ -205,11 +205,11 @@
 
         circleCircle: function(bodyA, bodyB) {
 
-            var centreA = bodyA.centre,
-                centreB = bodyB.centre;
+            var centerA = bodyA.center,
+                centerB = bodyB.center;
 
-            var dx = centreB[0] - centreA[0],
-                dy = centreB[1] - centreA[1];
+            var dx = centerB[0] - centerA[0],
+                dy = centerB[1] - centerA[1];
             var distanceSq = dx * dx + dy * dy;
             var rt = bodyA.radius + bodyB.radius;
             if (distanceSq > rt * rt) {
@@ -223,14 +223,14 @@
             ]
             var ratioA = bodyA.radius / distance;
             var contactOnA = [
-                centreA[0] + (centreB[0] - centreA[0]) * ratioA,
-                centreA[1] + (centreB[1] - centreA[1]) * ratioA
+                centerA[0] + (centerB[0] - centerA[0]) * ratioA,
+                centerA[1] + (centerB[1] - centerA[1]) * ratioA
             ]
 
             var normalB = [-normalA[0], -normalA[1]]
             var ratioB = bodyB.radius / distance;
             var contactOnB = [
-                centreB[0] + (centreA[0] - centreB[0]) * ratioB, centreB[1] + (centreA[1] - centreB[1]) * ratioB
+                centerB[0] + (centerA[0] - centerB[0]) * ratioB, centerB[1] + (centerA[1] - centerB[1]) * ratioB
             ]
             var overlap = rt - distance;
 
@@ -239,7 +239,7 @@
 
             var arbiter = this.getArbiter(a, b);
 
-            // normalA[2] = centreA[0] * normalA[0] + centreA[1] * normalA[1];
+            // normalA[2] = centerA[0] * normalA[0] + centerA[1] * normalA[1];
             arbiter.set(a, b, normalA);
 
             arbiter.addContact(contactOnA, contactOnB, overlap);
@@ -278,12 +278,12 @@
             var contactOnFace0;
             var contactOnVert0;
 
-            var centre = circle.centre;
+            var center = circle.center;
 
             if (facePoly == circle) {
                 var r = circle.radius;
                 contactOnVert0 = result.closest;
-                contactOnFace0 = [faceNormal[0] * r + centre[0], faceNormal[1] * r + centre[1]];
+                contactOnFace0 = [faceNormal[0] * r + center[0], faceNormal[1] * r + center[1]];
             } else {
 
                 var faceV0 = facePoly.vertices[faceIdx];
@@ -310,9 +310,9 @@
 
             var result = {};
 
-            var centre = circle.centre;
-            var cx = centre[0],
-                cy = centre[1];
+            var center = circle.center;
+            var cx = center[0],
+                cy = center[1];
             var radius = circle.radius;
 
 
@@ -562,13 +562,13 @@
                     if (min1 === min) {
                         var dx = closest1[0] - vertPoly.x,
                             dy = closest1[1] - vertPoly.y;
-                        var centreDist1 = dx * dx + dy * dy;
+                        var centerDist1 = dx * dx + dy * dy;
 
                         var dx = closest[0] - facePoly.x,
                             dy = closest[1] - facePoly.y;
-                        var centreDist2 = dx * dx + dy * dy;
+                        var centerDist2 = dx * dx + dy * dy;
 
-                        if (centreDist1 < centreDist2) {
+                        if (centerDist1 < centerDist2) {
                             min = min1 - 1;
                         }
                     }
