@@ -1,14 +1,6 @@
 "use strict";
 
-(function(_this) {
-
-    if (typeof exports == "undefined") {
-        var _exports = window || _this;
-        _exports.exports = _exports;
-    }
-
-}(this));
-
+var PP = PP || {};
 
 (function(exports, undefined) {
 
@@ -238,4 +230,4 @@
     exports.BodyType = BodyType;
     exports.ShapeType = ShapeType;
 
-}(exports));
+}(PP));

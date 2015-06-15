@@ -1,7 +1,10 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
 
+    var Class = exports.Class;
 
     var WorldRunner = function(cfg) {
 
@@ -107,5 +110,5 @@
 
     exports.WorldRunner = Class.create(WorldRunner,proto);
 
-}(exports));
+}(PP));
 

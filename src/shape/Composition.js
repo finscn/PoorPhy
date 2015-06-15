@@ -1,6 +1,12 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
+
+    var Class = exports.Class;
+    var Shape = exports.Shape;
+    var ShapeType = exports.ShapeType;
 
     // TO BE DONE
 
@@ -232,4 +238,4 @@
 
     exports.Composition = Class.create(Composition, proto);
 
-}(exports));
+}(PP));

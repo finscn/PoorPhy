@@ -1,6 +1,11 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
+
+    var Class = exports.Class;
+    var BodyType = exports.BodyType;
 
     var Arbiter = function(bodyA, bodyB) {
 
@@ -190,11 +195,11 @@
 
                 // TODO velocityBias
                 // if (contactCount==1){
-                    if (contact.velocityBias === null) {
-                        contact.velocityBias = -restitution * normalRelativeVel/iterations/contactCount;
-                    }else{
+                if (contact.velocityBias === null) {
+                    contact.velocityBias = -restitution * normalRelativeVel / iterations / contactCount;
+                } else {
 
-                    }
+                }
                 // }else{
                 //     contact.velocityBias=0;
                 // }
@@ -278,4 +283,4 @@
 
     exports.Arbiter = Class.create(Arbiter, proto);
 
-}(exports));
+}(PP));

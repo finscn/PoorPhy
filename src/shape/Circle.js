@@ -1,7 +1,11 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
 
+    var Class = exports.Class;
+    var ShapeType = exports.ShapeType;
 
     var Circle = function(cfg) {
 
@@ -128,4 +132,4 @@
 
     exports.Circle = Class.create(Circle, proto);
 
-}(exports));
+}(PP));

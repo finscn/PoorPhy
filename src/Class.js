@@ -1,6 +1,8 @@
-;
-(function(exports, undefined) {
+"use strict";
 
+var PP = PP || {};
+
+(function(exports, undefined) {
 
     var Class = {};
 
@@ -56,7 +58,7 @@
 
     exports.Class = Class;
 
-}(exports));
+}(PP));
 
 
 // var Class=exports.Class;

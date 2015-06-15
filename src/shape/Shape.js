@@ -1,7 +1,11 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
 
+    var Class = exports.Class;
+    var Body = exports.Body;
 
     var Shape = function(cfg) {
 
@@ -40,4 +44,4 @@
     exports.Shape = Class.create(Shape, proto);
 
 
-}(exports));
+}(PP));

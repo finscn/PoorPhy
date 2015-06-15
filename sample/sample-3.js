@@ -14,6 +14,16 @@ var friction = 0.3;
 var restitution = 0.25;
 var gravity = 9.5;
 
+(function() {
+
+
+    var Body = PP.Body;
+    var BodyType = PP.BodyType;
+    var Circle = PP.Circle;
+    var Polygon = PP.Polygon;
+    var Segment = PP.Segment;
+    var Composition = PP.Composition;
+    var World = PP.World;
 
 function initGround() {
 
@@ -54,7 +64,7 @@ function initBodies() {
 
 
 
-function init() {
+window.init=function () {
 
     world = new World({
         gravityY: gravity,
@@ -112,3 +122,5 @@ Composition.prototype.friction = friction;
 Composition.prototype.restitution = restitution;
 Composition.prototype.damping = damping;
 Composition.prototype.dampingAng = dampingAng;
+
+}());

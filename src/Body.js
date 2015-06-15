@@ -1,7 +1,11 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
 
+    var Class = exports.Class;
+    var BodyType = exports.BodyType;
 
     var Body = function(cfg) {
         for (var key in cfg) {
@@ -238,4 +242,4 @@
     exports.Body = Class.create(Body, proto);
 
 
-}(exports));
+}(PP));

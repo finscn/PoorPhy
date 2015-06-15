@@ -142,16 +142,16 @@ function createPolyBody(n, r, x, y, angle, type, addToWorld) {
     vertices = rotatePoints(vertices, angle || 0);
     vertices = translatePoints(vertices, x * scale, y * scale);
 
-    var body = new Polygon({
+    var body = new PP.Polygon({
             vertices: vertices,
             friction: friction,
             restitution: restitution
         })
-        // BodyType.Static;
+        // PP.BodyType.Static;
     if (type !== undefined && type !== null) {
         body.bodyType = type;
     }
-    if (body.bodyType === BodyType.Static) {
+    if (body.bodyType === PP.BodyType.Static) {
         body.mass = Infinity;
     }
     if (addToWorld !== false) {
@@ -166,16 +166,16 @@ function createRectBody(w, h, x, y, angle, type, addToWorld) {
     vertices = rotatePoints(vertices, angle || 0);
     vertices = translatePoints(vertices, x * scale, y * scale);
 
-    var body = new Polygon({
+    var body = new PP.Polygon({
             vertices: vertices,
             friction: friction,
             restitution: restitution
         })
-        // BodyType.Static;
+        // PP.BodyType.Static;
     if (type !== undefined && type !== null) {
         body.bodyType = type;
     }
-    if (body.bodyType === BodyType.Static) {
+    if (body.bodyType === PP.BodyType.Static) {
         body.mass = Infinity;
     }
     if (addToWorld !== false) {
@@ -193,7 +193,7 @@ function createSegmentBody(len, x, y, angle, type, addToWorld) {
     vertices = rotatePoints(vertices, angle || 0);
     vertices = translatePoints(vertices, x * scale, y * scale);
 
-    var body = new Segment({
+    var body = new PP.Segment({
         vertices: vertices,
         friction: friction,
         restitution: restitution
@@ -201,7 +201,7 @@ function createSegmentBody(len, x, y, angle, type, addToWorld) {
     if (type !== undefined && type !== null) {
         body.bodyType = type;
     }
-    if (body.bodyType === BodyType.Static) {
+    if (body.bodyType === PP.BodyType.Static) {
         body.mass = Infinity;
     }
     if (addToWorld !== false) {
@@ -213,7 +213,7 @@ function createSegmentBody(len, x, y, angle, type, addToWorld) {
 }
 
 function createCircleBody(r, x, y, angle, type, mass, addToWorld) {
-    var body = new Circle({
+    var body = new PP.Circle({
         radius: r * scale,
         x: x * scale,
         y: y * scale,
@@ -226,7 +226,7 @@ function createCircleBody(r, x, y, angle, type, mass, addToWorld) {
     if (type !== undefined && type !== null) {
         body.bodyType = type;
     }
-    if (body.bodyType === BodyType.Static) {
+    if (body.bodyType === PP.BodyType.Static) {
         body.mass = Infinity;
     }
     if (addToWorld !== false) {

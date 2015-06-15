@@ -1,6 +1,14 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
+
+    var Class = exports.Class;
+    var ShapeType = exports.ShapeType;
+    var Arbiter = exports.Arbiter;
+    var Polygon = exports.Polygon;
+
 
     var CollideType = {
         Poly_Poly: 1,
@@ -673,5 +681,4 @@
 
     exports.CollideManager = Class.create(CollideManager, proto);
 
-
-}(exports));
+}(PP));

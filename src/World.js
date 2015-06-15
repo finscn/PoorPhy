@@ -1,7 +1,12 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
 
+    var Class = exports.Class;
+    var BodyType = exports.BodyType;
+    var CollideManager = exports.CollideManager;
 
     var World = function(cfg) {
 
@@ -31,14 +36,14 @@
 
 
         init: function(parent) {
-            this.parent=parent;
+            this.parent = parent;
 
             this.bodies = [];
 
             this.initCollideManager();
         },
 
-        initCollideManager : function(){
+        initCollideManager: function() {
             var cm = this.collideManager = this.collideManager || new CollideManager();
 
             cm.onCollided = this.onCollided || cm.onCollided;
@@ -80,12 +85,12 @@
         },
 
         preSolve: function(timeStep) {
-            
+
             // var iterations = this.solveIterations;
             var collideManager = this.collideManager;
             // for (var i = 0; i < iterations; i++) {
-                collideManager.preSolve(timeStep)
-            // }
+            collideManager.preSolve(timeStep)
+                // }
         },
 
         solve: function(timeStep) {
@@ -162,4 +167,4 @@
     exports.World = Class.create(World, proto);
 
 
-}(exports));
+}(PP));

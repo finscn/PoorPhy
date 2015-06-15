@@ -1,7 +1,12 @@
 "use strict";
 
+var PP = PP || {};
+
 (function(exports, undefined) {
 
+    var Class = exports.Class;
+    var ShapeType = exports.ShapeType;
+    var Polygon = exports.Polygon;
 
     var Segment = function(cfg) {
 
@@ -41,4 +46,4 @@
     exports.Segment = Class.create(Segment, proto);
 
 
-}(exports));
+}(PP));
