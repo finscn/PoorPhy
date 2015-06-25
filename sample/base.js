@@ -187,6 +187,25 @@ function createRectBody(w, h, x, y, angle, type, addToWorld) {
 }
 
 
+function createPolylineBody(vertices, type, addToWorld) {
+    var body = new PP.Polyline({
+        vertices: vertices,
+        friction: friction,
+        restitution: restitution
+    });
+    if (type !== undefined && type !== null) {
+        body.bodyType = type;
+    }
+    if (body.bodyType === PP.BodyType.Static) {
+        body.mass = Infinity;
+    }
+    if (addToWorld !== false) {
+        body.init();
+        world.addBody(body);
+    }
+    return body;
+}
+
 function createSegmentBody(len, x, y, angle, type, addToWorld) {
 
     var vertices = createSegment(len * scale);
@@ -235,7 +254,22 @@ function createCircleBody(r, x, y, angle, type, mass, addToWorld) {
     }
     return body;
 
+}
 
+
+function createCompositionBody(shapes, type, addToWorld) {
+    var comp = new PP.Composition({
+        shapes: shapes,
+        bodyType: type,
+    });
+    if (comp.bodyType === PP.BodyType.Static) {
+        comp.mass = Infinity;
+    }
+    if (addToWorld !== false) {
+        comp.init();
+        world.addBody(comp);
+    }
+    return comp;
 }
 
 function drawBody(context, body, color) {

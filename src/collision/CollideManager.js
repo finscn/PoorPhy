@@ -86,10 +86,8 @@ var PP = PP || {};
                                 var bodyB = group[c];
                                 if (!checked[bodyB.id]) {
                                     checked[bodyB.id] = true;
-
                                     this.collideTowBodies(bodyA, bodyB, timeStep);
-                                    cc++
-
+                                    cc++;
                                 }
                             }
                             group.push(bodyA);
@@ -110,10 +108,8 @@ var PP = PP || {};
             for (var i = 0, len = bodies.length; i < len - 1; i++) {
                 var bodyA = bodies[i];
                 for (var j = i + 1; j < len; j++) {
-
                     this.collideTowBodies(bodyA, bodies[j], timeStep);
                     cc++
-
                 }
             }
             return cc;
@@ -127,15 +123,12 @@ var PP = PP || {};
                 return null;
             }
 
-
             var contactKey = bodyA.id + "_" + bodyB.id;
             var arbiter = false;
             var boxA = bodyA.aabb,
                 boxB = bodyB.aabb;
             if (boxA[0] < boxB[2] && boxA[2] > boxB[0] && boxA[1] < boxB[3] && boxA[3] > boxB[1]) {
-
                 arbiter = this[this.collideMethodMap[bodyA.shapeType | bodyB.shapeType]](bodyA, bodyB);
-
             }
 
             if (arbiter) {
@@ -471,7 +464,6 @@ var PP = PP || {};
 
             faceV0 = facePoly.vertices[faceIdx];
             faceV1 = facePoly.vertices[(faceIdx + 1) % facePoly.vertexCount];
-
 
             var contactOnFace0, contactOnVert0, contactOnFace1, contactOnVert1;
             var overlap;

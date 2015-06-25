@@ -6,6 +6,7 @@ var PP = PP || {};
 
     var Class = exports.Class;
     var Shape = exports.Shape;
+    var BodyType = exports.BodyType;
     var ShapeType = exports.ShapeType;
 
     // TO BE DONE
@@ -27,9 +28,16 @@ var PP = PP || {};
 
         init: function() {
             var Me = this;
-
             this.shapes = this.shapes || [];
+            var pMass = null;
+            if (this.mass !== null && this.shapes.length > 0) {
+                pMass = this.mass / this.shapes.length;
+            }
             this.shapes.forEach(function(s) {
+                s.bodyType = Me.bodyType;
+                if (pMass !== null) {
+                    s.mass = pMass;
+                }
                 s.init();
             });
             this.initMassData();
@@ -45,8 +53,8 @@ var PP = PP || {};
 
             this.x = x;
             this.y = y;
-            this.originalX=this.x;
-            this.originalY=this.y;
+            this.originalX = this.x;
+            this.originalY = this.y;
 
             this.last = {};
             this.aabb = [0, 0, 0, 0];
@@ -81,7 +89,6 @@ var PP = PP || {};
             for (var i = 0; i < len; ++i) {
                 var s = shapes[i];
                 vertices.push([s.x - ac[0], s.y - ac[1]]);
-
             }
 
             var c = this.computeCentroid(vertices);
