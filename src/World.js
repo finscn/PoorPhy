@@ -146,8 +146,7 @@ var PP = PP || {};
                     continue;
                 }
                 if (!body.sleeping) {
-                    body.integrateAngle(timeStep);
-                    body.integratePos(timeStep);
+                    body.integrate(timeStep);
                     body.update(timeStep);
                 }
 
