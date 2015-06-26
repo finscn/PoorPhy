@@ -192,11 +192,15 @@ var PP = PP || {};
         update: function(timeStep) {
 
         },
+
+
         integrate: function(timeStep) {
 
 
-            this.velX += (this.forceX * this.invMass) * timeStep;
-            this.velY += (this.forceY * this.invMass) * timeStep;
+            // this.velX += (this.forceX * this.invMass) * timeStep;
+            // this.velY += (this.forceY * this.invMass) * timeStep;
+            this.integrateVel(timeStep);
+            this.integrateVelAngle(timeStep);
 
             this.integrateAngle(timeStep);
             this.integratePos(timeStep);
@@ -207,15 +211,9 @@ var PP = PP || {};
 
         },
 
-
-        integrateVelAngle: function(timeStep) {
-            this.velAng += (this.forceTorque * this.invMass) * timeStep;
-            if (this.dampingAng !== 0) {
-                this.velAng *= Math.min(1, Math.max(0, 1 - this.dampingAng * timeStep));
-            }
-        },
-
         integrateVel: function(timeStep) {
+            // this.lastVelX = this.velX;
+            // this.lastVelY = this.velY;
             this.velX += (this.gravityX + this.forceX * this.invMass) * timeStep;
             this.velY += (this.gravityY + this.forceY * this.invMass) * timeStep;
             if (this.damping !== 0) {
@@ -225,15 +223,22 @@ var PP = PP || {};
             }
         },
 
+        integrateVelAngle: function(timeStep) {
+            // this.lastVelAng = this.velAng;
+            this.velAng += (this.forceTorque * this.invMass) * timeStep;
+            if (this.dampingAng !== 0) {
+                this.velAng *= Math.min(1, Math.max(0, 1 - this.dampingAng * timeStep));
+            }
+        },
+
         integrateAngle: function(timeStep) {
-            this.lastAngle = this.angle;
+            // this.lastAngle = this.angle;
             this.setAngle(this.angle + this.velAng * timeStep);
         },
 
-
         integratePos: function(timeStep) {
-            this.lastX = this.x;
-            this.lastY = this.y;
+            // this.lastX = this.x;
+            // this.lastY = this.y;
             this.setPos(this.x + this.velX * timeStep, this.y + this.velY * timeStep);
         },
 
