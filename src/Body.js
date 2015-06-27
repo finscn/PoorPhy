@@ -197,10 +197,10 @@ var PP = PP || {};
         integrate: function(timeStep) {
 
 
-            // this.velX += (this.forceX * this.invMass) * timeStep;
-            // this.velY += (this.forceY * this.invMass) * timeStep;
-            this.integrateVel(timeStep);
-            this.integrateVelAngle(timeStep);
+            this.velX += (this.forceX * this.invMass) * timeStep;
+            this.velY += (this.forceY * this.invMass) * timeStep;
+            // this.integrateVel(timeStep);
+            // this.integrateVelAngle(timeStep);
 
             this.integrateAngle(timeStep);
             this.integratePos(timeStep);
