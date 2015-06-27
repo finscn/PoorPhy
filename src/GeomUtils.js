@@ -335,17 +335,17 @@ var GeomUtils;
                 var dot = lastNormal[0] * normal[0] + lastNormal[1] * normal[1];
                 var cross = lastNormal[0] * normal[1] - lastNormal[1] * normal[0];
                 cross = Math.min(1, Math.max(-1, cross));
-                var rad = Math.asin(cross * sign);
+                var fixCross = cross * sign;
+                var rad = Math.asin(fixCross);
                 var deg = rad * GeomUtils.RAD_TO_DEG;
                 // if (cross >= 0) {
                 if (dot > -GeomUtils.ZERO) {
                     deg = 180 - deg;
                 }
-                // if (deg > 0) {
-                console.log(i, dot, cross, deg);
-                // }
-                // }
 
+                // if (deg > 0) {
+                // console.log(i, dot, cross, deg);
+                // }
                 if (deg > 0 && deg < maxAng) {
                     var _p1 = [
                         point[0] + lastNormal[0] * delta,
@@ -376,7 +376,8 @@ var GeomUtils;
                     var q = delta / cOffset;
                     newPoly.push([
                         point[0] + (lastNormal[0] + normal[0]) * q,
-                        point[1] + (lastNormal[1] + normal[1]) * q
+                        point[1] + (lastNormal[1] + normal[1]) * q,
+                        fixCross < 0
                     ]);
                 }
             }
@@ -433,7 +434,6 @@ var GeomUtils;
                 point[1] + lastNormal[1] * delta
             ];
             newPoly.push(endPoint);
-            console.log(newPoly.length)
             return newPoly;
 
         },

@@ -351,6 +351,18 @@ function drawPoly(context, poly, color) {
 
 }
 
+function drawPolyline(context, polyline, color) {
+    var bak = context.strokeStyle;
+    context.strokeStyle = color || bak;
+    context.beginPath();
+    context.moveTo(polyline[0][0], polyline[0][1]);
+    for (var i = 1, len = polyline.length; i < len; i++) {
+        context.lineTo(polyline[i][0], polyline[i][1]);
+    }
+    context.stroke();
+    context.closePath();
+    context.strokeStyle = bak;
+}
 
 
 function drawPoint(context, x, y, color) {
@@ -367,10 +379,10 @@ function drawCircle(context, circle, color) {
     context.strokeStyle = color || DEFAULT_COLOR;
     context.fillStyle = color || DEFAULT_COLOR;
 
-    var r = circle.radius * RENDER_SCALE;
     var x = circle.x;
     var y = circle.y;
 
+    var r = circle.radius * RENDER_SCALE;
     var c = circle.center;
 
     // in the context.arc path , if draw other things will trigger one chrome's bug.

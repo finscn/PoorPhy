@@ -41,8 +41,12 @@ var PP = PP || {};
             this.bodies = [];
 
             this.initCollideManager();
-        },
 
+            this.onInit();
+        },
+        onInit: function(){
+
+        },
         initCollideManager: function() {
             var cm = this.collideManager = this.collideManager || new CollideManager();
 
