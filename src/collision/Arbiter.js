@@ -35,7 +35,7 @@ var PP = PP || {};
         set: function(bodyA, bodyB, normalA) {
             this.bodyA = bodyA;
             this.bodyB = bodyB;
-            this.key = bodyA.id + "_" + bodyB.id;
+            this.key = bodyA.id + "_&_" + bodyB.id;
             this.normal = normalA;
             this.tangent = [-normalA[1], normalA[0]];
 
@@ -141,7 +141,7 @@ var PP = PP || {};
             }
         },
 
-        solve: function(timeStep, iterations) {
+        solve: function(timeStep, iterations, iter) {
 
             var bodyA = this.bodyA,
                 bodyB = this.bodyB,
@@ -187,10 +187,9 @@ var PP = PP || {};
                     }
                 }
 
-
                 var relativeVel = [
                     (bodyA.velX - bodyA.velAng * armA[1]) - (bodyB.velX - bodyB.velAng * armB[1]), (bodyA.velY + bodyA.velAng * armA[0]) - (bodyB.velY + bodyB.velAng * armB[0])
-                ]
+                ];
                 var normalRelativeVel = relativeVel[0] * normal[0] + relativeVel[1] * normal[1];
 
                 // TODO velocityBias
@@ -203,7 +202,6 @@ var PP = PP || {};
                 // }else{
                 //     contact.velocityBias=0;
                 // }
-
 
                 if (depth > 0) {
 

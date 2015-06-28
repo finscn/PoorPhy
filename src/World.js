@@ -44,7 +44,7 @@ var PP = PP || {};
 
             this.onInit();
         },
-        onInit: function(){
+        onInit: function() {
 
         },
         initCollideManager: function() {
@@ -101,7 +101,7 @@ var PP = PP || {};
             var iterations = this.solveIterations;
             var collideManager = this.collideManager;
             for (var i = 0; i < iterations; i++) {
-                collideManager.solve(timeStep, iterations, i)
+                collideManager.solve(timeStep, iterations, i);
             }
         },
 

@@ -65,7 +65,9 @@ var PP = PP || {};
 
             for (var i = 0, len = bodies.length; i < len; i++) {
                 var bodyA = bodies[i];
-
+                if (bodyA.disabled) {
+                    continue;
+                }
                 var box1 = bodyA.aabb;
                 var colMin = box1[0] / gridCellSize >> 0,
                     rowMin = box1[1] / gridCellSize >> 0,
@@ -84,6 +86,9 @@ var PP = PP || {};
                         } else {
                             for (var c = 0, glen = group.length; c < glen; c++) {
                                 var bodyB = group[c];
+                                if (bodyB.disabled) {
+                                    continue;
+                                }
                                 if (!checked[bodyB.id]) {
                                     checked[bodyB.id] = true;
                                     this.collideTowBodies(bodyA, bodyB, timeStep);
@@ -107,8 +112,15 @@ var PP = PP || {};
 
             for (var i = 0, len = bodies.length; i < len - 1; i++) {
                 var bodyA = bodies[i];
+                if (bodyA.disabled) {
+                    continue;
+                }
                 for (var j = i + 1; j < len; j++) {
-                    this.collideTowBodies(bodyA, bodies[j], timeStep);
+                    var bodyB = bodies[j];
+                    if (bodyB.disabled) {
+                        continue;
+                    }
+                    this.collideTowBodies(bodyA, bodyB, timeStep);
                     cc++
                 }
             }
@@ -123,7 +135,7 @@ var PP = PP || {};
                 return null;
             }
 
-            var contactKey = bodyA.id + "_" + bodyB.id;
+            var contactKey = bodyA.id + "_&_" + bodyB.id;
             var arbiter = false;
             var boxA = bodyA.aabb,
                 boxB = bodyB.aabb;
@@ -132,21 +144,26 @@ var PP = PP || {};
             }
 
             if (arbiter) {
+                this.onColliding(bodyA, bodyB, arbiter, timeStep);
                 if (!this.penetrated[contactKey]) {
                     this.onCollided(bodyA, bodyB, arbiter, timeStep);
-                    this.penetrated[contactKey] = true;
+                    this.penetrated[contactKey] = 1;
+                } else {
+                    this.penetrated[contactKey]++;
                 }
             } else {
                 if (this.penetrated[contactKey]) {
                     this.onSeparated(bodyA, bodyB, timeStep)
-                    this.penetrated[contactKey] = false;
+                    this.penetrated[contactKey] = 0;
                 }
             }
             return arbiter;
         },
-
+        hasCollided: function(bodyA, bodyB) {
+            var contactKey = bodyA.id + "_&_" + bodyB.id;
+            return this.penetrated[contactKey];
+        },
         getArbiter: function(bodyA, bodyB) {
-
             var arbiters = this.arbiters;
             var arbiterCount = this.arbiterCount;
             if (!arbiters[arbiterCount]) {
@@ -190,7 +207,6 @@ var PP = PP || {};
 
                 }
             }
-
         },
 
         onCollided: function(bodyA, bodyB, arbiter, timeStep) {
@@ -199,7 +215,10 @@ var PP = PP || {};
         onSeparated: function(bodyA, bodyB, timeStep) {
 
         },
-        onCollideSolve: function(arbiter, timeStep) {
+        onColliding: function(bodyA, bodyB, arbiter, timeStep) {
+
+        },
+        onCollideSolve: function(arbiter, timeStep, iterations, iter) {
 
         },
 
@@ -239,7 +258,7 @@ var PP = PP || {};
             var b = bodyB.body || bodyB;
 
             var arbiter = this.getArbiter(a, b);
-
+            arbiter.overlap = overlap;
             // normalA[2] = centerA[0] * normalA[0] + centerA[1] * normalA[1];
             arbiter.set(a, b, normalA);
 
@@ -299,6 +318,7 @@ var PP = PP || {};
             var b = vertPoly.body || vertPoly;
 
             var arbiter = this.getArbiter(a, b);
+            arbiter.overlap = overlap;
             arbiter.set(a, b, faceNormal);
 
             arbiter.addContact(contactOnFace0, contactOnVert0);
@@ -466,7 +486,7 @@ var PP = PP || {};
             faceV1 = facePoly.vertices[(faceIdx + 1) % facePoly.vertexCount];
 
             var contactOnFace0, contactOnVert0, contactOnFace1, contactOnVert1;
-            var overlap;
+
             if (vertV0) {
                 contactOnFace0 = Polygon.projectPointToEdge(vertV0, faceV0, faceV1);
                 contactOnVert0 = Polygon.projectPointToEdge(faceV1, vertV0, vertV1);
@@ -482,6 +502,7 @@ var PP = PP || {};
             var b = vertPoly.body || vertPoly;
 
             var arbiter = this.getArbiter(a, b);
+            arbiter.overlap = overlap;
             arbiter.set(a, b, faceNormal);
 
             arbiter.addContact(contactOnFace0, contactOnVert0);
