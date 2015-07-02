@@ -43,7 +43,6 @@ var PP = PP || {};
             this.initMassData();
             var x = this.originalCentroid[0],
                 y = this.originalCentroid[1];
-
             this.shapes.forEach(function(s) {
                 var cx = s.x;
                 var cy = s.y;
@@ -108,39 +107,51 @@ var PP = PP || {};
         computeCentroid: function(vertices) {
             var len = vertices.length;
             var c;
-            if (len == 1) {
-                return [vertices[0][0], vertices[0][1]];
-            }
-            if (len == 2) {
-                c = [(vertices[0][0] + vertices[1][0]) / 2, (vertices[0][1] + vertices[1][1]) / 2];
-                return c;
-            }
-            c = [0, 0];
-
-            var area2 = 0;
-
-            var s0 = vertices[len - 1];
-            var x1 = s0[0],
-                y1 = s0[1];
-
+            var x = 0,
+                y = 0;
             for (var i = 0; i < len; ++i) {
-
                 var s1 = vertices[i];
-                var x2 = s1[0],
-                    y2 = s1[1];
-
-                var triangleArea2 = (x1 * y2 - y1 * x2);
-                area2 += triangleArea2;
-
-                c[0] += triangleArea2 * (x1 + x2);
-                c[1] += triangleArea2 * (y1 + y2);
-
-                x1 = x2;
-                y1 = y2;
+                x += s1[0];
+                y += s1[1];
             }
+            c = [x / len, y / len];
+            return c;
 
-            c[0] = c[0] / (area2 * 3);
-            c[1] = c[1] / (area2 * 3);
+            // var len = vertices.length;
+            // var c;
+            // if (len == 1) {
+            //     return [vertices[0][0], vertices[0][1]];
+            // }
+            // if (len == 2) {
+            //     c = [(vertices[0][0] + vertices[1][0]) / 2, (vertices[0][1] + vertices[1][1]) / 2];
+            //     return c;
+            // }
+            // c = [0, 0];
+
+            // var area2 = 0;
+
+            // var s0 = vertices[len - 1];
+            // var x1 = s0[0],
+            //     y1 = s0[1];
+
+            // for (var i = 0; i < len; ++i) {
+
+            //     var s1 = vertices[i];
+            //     var x2 = s1[0],
+            //         y2 = s1[1];
+
+            //     var triangleArea2 = (x1 * y2 - y1 * x2);
+            //     area2 += triangleArea2;
+
+            //     c[0] += triangleArea2 * (x1 + x2);
+            //     c[1] += triangleArea2 * (y1 + y2);
+
+            //     x1 = x2;
+            //     y1 = y2;
+            // }
+
+            // c[0] = c[0] / (area2 * 3);
+            // c[1] = c[1] / (area2 * 3);
 
             return c;
         },

@@ -212,8 +212,8 @@ var PP = PP || {};
         },
 
         integrateVel: function(timeStep) {
-            // this.lastVelX = this.velX;
-            // this.lastVelY = this.velY;
+            this.lastVelX = this.velX;
+            this.lastVelY = this.velY;
             this.velX += (this.gravityX + this.forceX * this.invMass) * timeStep;
             this.velY += (this.gravityY + this.forceY * this.invMass) * timeStep;
             if (this.damping !== 0) {
