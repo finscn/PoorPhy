@@ -55,7 +55,6 @@ var PP = PP || {};
         noop: function() {},
 
         init: function() {
-
             this.last = {};
             this.aabb = [0, 0, 0, 0];
         },
@@ -91,7 +90,6 @@ var PP = PP || {};
             if (!inertia && inertia !== 0) {
                 this.inertiaFactor = this.inertiaFactor || (this.mass * 2) * this.area;
                 inertia = this.density * this.inertiaFactor / 12;
-                console.log(inertia)
             }
             if (inertia <= 0 || inertia == Infinity || this.mass <= 0 || this.mass == Infinity) {
                 inertia = Infinity;
@@ -111,7 +109,6 @@ var PP = PP || {};
         setAngle: function(angle) {
             this.angle = angle;
         },
-
 
         setForce: function(x, y) {
             this.forceX = x;

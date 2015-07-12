@@ -198,6 +198,16 @@ var PP = PP || {};
                 aabb[2] + ext,
                 aabb[3] + ext
             ];
+        },
+
+        offsetAngle: function(angle) {
+            angle = angle % PP.Const.DOUBLE_PI;
+            if (angle > Math.PI) {
+                angle -= PP.Const.DOUBLE_PI;
+            } else if (angle < -Math.PI) {
+                angle += PP.Const.DOUBLE_PI;
+            }
+            return angle;
         }
 
     }
