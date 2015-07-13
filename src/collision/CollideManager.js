@@ -48,7 +48,6 @@ var PP = PP || {};
             8: "compComp",
             9: "compSingle",
             10: "compSingle",
-
         },
 
         collideCount: 0,
@@ -223,7 +222,7 @@ var PP = PP || {};
         },
 
 
-        circleCircle: function(bodyA, bodyB) {
+        "circleCircle": function(bodyA, bodyB) {
 
             var centerA = bodyA.center,
                 centerB = bodyB.center;
@@ -269,7 +268,7 @@ var PP = PP || {};
 
         },
 
-        polyCircle: function(bodyA, bodyB) {
+        "polyCircle": function(bodyA, bodyB) {
 
             var poly, circle;
             if (bodyA.shapeType == ShapeType.Poly) {
@@ -446,7 +445,7 @@ var PP = PP || {};
         },
 
 
-        polyPoly: function(bodyA, bodyB) {
+        "polyPoly": function(bodyA, bodyB) {
 
             var vertPoly, facePoly, faceIdx, faceNormal;
             var vertV0, vertV1, faceV0, faceV1;
@@ -636,7 +635,7 @@ var PP = PP || {};
             return result;
         },
 
-        compSingle: function(bodyA, bodyB) {
+        "compSingle": function(bodyA, bodyB) {
 
             var comp, single;
             if (bodyB.shapeType == ShapeType.Comp) {
@@ -664,7 +663,7 @@ var PP = PP || {};
             return arbiter;
         },
 
-        compComp: function(bodyA, bodyB) {
+        "compComp": function(bodyA, bodyB) {
 
             var shapesA = bodyA.shapes;
             var shapesB = bodyB.shapes;
