@@ -32,7 +32,7 @@ var PP = PP || {};
 
         forceX: 0,
         forceY: 0,
-        forceTorque: 0,
+        torque: 0,
 
         damping: 0,
         dampingAng: 0,
@@ -119,6 +119,18 @@ var PP = PP || {};
             return this.velX * this.velX + this.velY * this.velY;
         },
 
+        applyImpulse: function(x, y, point) {
+            if (this.bodyType != BodyType.Dynamic) {
+                return;
+            }
+            this.awake();
+            this.velX += this.invMass * x;
+            this.velY += this.invMass * y;
+            if (point) {
+                this.velAng += ((point[0] - this.x) * y - (point[1] - this.y) * x) * this.invInertia;
+            }
+        },
+
         applyForce: function(x, y, point) {
             if (this.bodyType != BodyType.Dynamic) {
                 return;
@@ -128,11 +140,28 @@ var PP = PP || {};
             this.forceY += y;
 
             if (point) {
-                this.forceTorque += ((point[0] - this.x) * y - (point[1] - this.y) * x);
+                var torque = ((point[0] - this.x) * y - (point[1] - this.y) * x);
+                this.torque += torque;
             }
 
         },
 
+        applyForceTorque: function(x, y, point) {
+            if (this.bodyType != BodyType.Dynamic) {
+                return;
+            }
+            this.awake();
+            var torque = ((point[0] - this.x) * y - (point[1] - this.y) * x);
+            this.torque += torque;
+        },
+
+        applyTorque: function(torque) {
+            if (this.bodyType != BodyType.Dynamic) {
+                return;
+            }
+            this.awake();
+            this.torque += torque;
+        },
 
         applyDamping: function(timeStep) {
             var d = 1 - timeStep * this.damping;
@@ -149,26 +178,6 @@ var PP = PP || {};
             this.velAng *= d;
         },
 
-        applyTorque: function(torque) {
-            if (this.bodyType != BodyType.Dynamic) {
-                return;
-            }
-            this.awake();
-            this.forceTorque += torque;
-        },
-
-
-        applyImpulse: function(x, y, point) {
-            if (this.bodyType != BodyType.Dynamic) {
-                return;
-            }
-            this.awake();
-            this.velX += this.invMass * x;
-            this.velY += this.invMass * y;
-            if (point) {
-                this.velAng += ((point[0] - this.x) * y - (point[1] - this.y) * x) * this.invInertia;
-            }
-        },
 
         awake: function() {
             this.sleeping = false;
@@ -222,7 +231,7 @@ var PP = PP || {};
 
         integrateVelAngle: function(timeStep) {
             // this.lastVelAng = this.velAng;
-            this.velAng += (this.forceTorque * this.invMass) * timeStep;
+            this.velAng += (this.torque * this.invMass) * timeStep;
             if (this.dampingAng !== 0) {
                 this.velAng *= Math.min(1, Math.max(0, 1 - this.dampingAng * timeStep));
             }

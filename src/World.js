@@ -159,7 +159,7 @@ var PP = PP || {};
                 }
 
                 body.setForce(0, 0);
-                body.forceTorque = 0;
+                body.torque = 0;
                 i++;
             }
 
